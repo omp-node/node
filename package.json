@@ -1,0 +1,15 @@
+{
+  "name": "@open.mp/node",
+  "version": "0.1.0",
+  "description": "open.mp nodejs package. contains constants, type definitions, and initializers",
+  "main": "",
+  "types": "./index.d.ts",
+  "type": "module",
+  "repository": "https://github.com/omp-node/node",
+  "homepage": "https://github.com/omp-node/node",
+  "author": "Amyr (iAmir) Ahmady",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/omp-node/node/issues"
+  }
+}
