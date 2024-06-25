@@ -35,7 +35,7 @@ class Menu {
         throw new Error("Failed to retrieve menu");
       }
 
-      this.#ptr = result.ret;
+      this.#ptr = BigInt(result.ret);
       this.#id = titleOrId;
       return;
     }
@@ -52,7 +52,7 @@ class Menu {
       throw new Error("Failed to create menu");
     }
 
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

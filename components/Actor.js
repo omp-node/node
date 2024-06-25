@@ -34,18 +34,17 @@ class Actor {
         throw new Error("Failed to retrieve actor");
       }
 
-      this.#ptr = result.ret;
+      this.#ptr = BigInt(result.ret);
       this.#id = modelOrId;
       return;
     }
 
-    const result = __internal_omp.Actor.Create(modelOrId, x, y, z, rot, 0);
-    console.log("__internal_omp.Actor.Create", result);
+    const result = __internal_omp.Actor.Create(modelOrId, x, y, z, rot);
     if (result.ret === 0) {
       throw new Error("Failed to create actor");
     }
 
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

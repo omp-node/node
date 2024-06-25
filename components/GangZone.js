@@ -33,7 +33,7 @@ class GangZone {
         throw new Error("Failed to retrieve gangzone");
       }
 
-      this.#ptr = result.ret;
+      this.#ptr = BigInt(result.ret);
       this.#id = minxOrId;
       return;
     }
@@ -43,7 +43,7 @@ class GangZone {
       throw new Error("Failed to create gangZone");
     }
 
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

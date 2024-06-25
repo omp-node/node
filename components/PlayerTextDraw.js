@@ -36,12 +36,15 @@ class PlayerTextDraw {
    */
   constructor(player, xOrId, y, text) {
     if (y === undefined && text === undefined) {
-      const result = __internal_omp.PlayerTextDraw.FromID(player.getPtr(), xOrId);
+      const result = __internal_omp.PlayerTextDraw.FromID(
+        player.getPtr(),
+        xOrId
+      );
       if (result.ret === 0) {
         throw new Error("Failed to retrieve playerTextDraw");
       }
 
-      this.#ptr = result.ret;
+      this.#ptr = BigInt(result.ret);
       this.#id = xOrId;
       this.#player = player;
       return;
@@ -53,7 +56,7 @@ class PlayerTextDraw {
     }
 
     this.#player = player;
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

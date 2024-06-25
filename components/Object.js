@@ -46,7 +46,7 @@ class Object {
         throw new Error("Failed to retrieve object");
       }
 
-      this.#ptr = result.ret;
+      this.#ptr = BigInt(result.ret);
       this.#id = modelidOrId;
       return;
     }
@@ -65,7 +65,7 @@ class Object {
       throw new Error("Failed to create object");
     }
 
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

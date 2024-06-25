@@ -59,7 +59,7 @@ class PlayerObject {
         throw new Error("Failed to retrieve playerTextLabel");
       }
 
-      this.#ptr = result.ret;
+      this.#ptr = BigInt(result.ret);
       this.#id = modelidOrId;
       this.#player = player;
       return;
@@ -81,7 +81,7 @@ class PlayerObject {
     }
 
     this.#player = player;
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

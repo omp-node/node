@@ -54,7 +54,7 @@ class Class {
         throw new Error("Failed to retrieve class");
       }
 
-      this.#ptr = result.ret;
+      this.#ptr = BigInt(result.ret);
       this.#id = teamOrId;
       return;
     }
@@ -77,7 +77,7 @@ class Class {
       throw new Error("Failed to create class");
     }
 
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

@@ -37,7 +37,7 @@ class TextLabel {
         throw new Error("Failed to retrieve textLabel");
       }
 
-      this.#ptr = result.ret;
+      this.#ptr = BigInt(result.ret);
       this.#id = textOrId;
       return;
     }
@@ -56,7 +56,7 @@ class TextLabel {
       throw new Error("Failed to create textLabel");
     }
 
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

@@ -29,7 +29,7 @@ class Player {
       throw new Error("Failed to retireve player");
     }
 
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     this.#id = id;
   }
 

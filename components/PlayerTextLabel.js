@@ -53,12 +53,15 @@ class PlayerTextLabel {
     los
   ) {
     if (color === undefined && x === undefined) {
-      const result = __internal_omp.PlayerTextLabel.FromID(player.getPtr(), textOrId);
+      const result = __internal_omp.PlayerTextLabel.FromID(
+        player.getPtr(),
+        textOrId
+      );
       if (result.ret === 0) {
         throw new Error("Failed to retrieve playerTextLabel");
       }
 
-      this.#ptr = result.ret;
+      this.#ptr = BigInt(result.ret);
       this.#id = textOrId;
       this.#player = player;
       return;
@@ -81,7 +84,7 @@ class PlayerTextLabel {
     }
 
     this.#player = player;
-    this.#ptr = result.ret;
+    this.#ptr = BigInt(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }
