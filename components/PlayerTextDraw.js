@@ -144,18 +144,18 @@ class PlayerTextDraw {
   }
 
   /**
-   * @method letterSize
+   * @method setLetterSize
    * @param {number} x
    * @param {number} y
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  letterSize(x, y) {
+  setLetterSize(x, y) {
     if (!this.#ptr || !this.#player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.LetterSize(
+    const result = __internal_omp.PlayerTextDraw.SetLetterSize(
       this.#player.getPtr(),
       this.#ptr,
       x,
@@ -165,18 +165,18 @@ class PlayerTextDraw {
   }
 
   /**
-   * @method textSize
+   * @method setTextSize
    * @param {number} x
    * @param {number} y
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  textSize(x, y) {
+  setTextSize(x, y) {
     if (!this.#ptr || !this.#player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.TextSize(
+    const result = __internal_omp.PlayerTextDraw.SetTextSize(
       this.#player.getPtr(),
       this.#ptr,
       x,
@@ -186,17 +186,17 @@ class PlayerTextDraw {
   }
 
   /**
-   * @method alignment
+   * @method setAlignment
    * @param {number} alignment
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  alignment(alignment) {
+  setAlignment(alignment) {
     if (!this.#ptr || !this.#player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.Alignment(
+    const result = __internal_omp.PlayerTextDraw.SetAlignment(
       this.#player.getPtr(),
       this.#ptr,
       alignment
@@ -205,17 +205,17 @@ class PlayerTextDraw {
   }
 
   /**
-   * @method color
+   * @method setColor
    * @param {number} color
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  color(color) {
+  setColor(color) {
     if (!this.#ptr || !this.#player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.Color(
+    const result = __internal_omp.PlayerTextDraw.SetColor(
       this.#player.getPtr(),
       this.#ptr,
       color
@@ -243,17 +243,17 @@ class PlayerTextDraw {
   }
 
   /**
-   * @method boxColor
+   * @method setBoxColor
    * @param {number} color
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  boxColor(color) {
+  setBoxColor(color) {
     if (!this.#ptr || !this.#player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.BoxColor(
+    const result = __internal_omp.PlayerTextDraw.SetBoxColor(
       this.#player.getPtr(),
       this.#ptr,
       color
@@ -300,17 +300,17 @@ class PlayerTextDraw {
   }
 
   /**
-   * @method backgroundColor
+   * @method setBackgroundColor
    * @param {number} color
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  backgroundColor(color) {
+  setBackgroundColor(color) {
     if (!this.#ptr || !this.#player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.BackgroundColor(
+    const result = __internal_omp.PlayerTextDraw.SetBackgroundColor(
       this.#player.getPtr(),
       this.#ptr,
       color
@@ -319,17 +319,17 @@ class PlayerTextDraw {
   }
 
   /**
-   * @method font
+   * @method setFont
    * @param {number} font
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  font(font) {
+  setFont(font) {
     if (!this.#ptr || !this.#player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.Font(
+    const result = __internal_omp.PlayerTextDraw.SetFont(
       this.#player.getPtr(),
       this.#ptr,
       font
