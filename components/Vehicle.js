@@ -118,15 +118,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getMaxPassengerSeats(modelid) {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
-    const result = __internal_omp.Vehicle.GetMaxPassengerSeats(
-      this.#ptr,
-      modelid
-    );
+  static getMaxPassengerSeats(modelid) {
+    const result = __internal_omp.Vehicle.GetMaxPassengerSeats(modelid);
     return result.ret;
   }
 
@@ -271,12 +264,8 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  useManualEngineAndLights() {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
-    const result = __internal_omp.Vehicle.UseManualEngineAndLights(this.#ptr);
+  static useManualEngineAndLights() {
+    const result = __internal_omp.Vehicle.UseManualEngineAndLights();
     return result.ret;
   }
 
@@ -653,15 +642,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getComponentType(componentid) {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
-    const result = __internal_omp.Vehicle.GetComponentType(
-      this.#ptr,
-      componentid
-    );
+  static getComponentType(componentid) {
+    const result = __internal_omp.Vehicle.GetComponentType(componentid);
     return result.ret;
   }
 
@@ -672,13 +654,8 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  canHaveComponent(modelid, componentid) {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
+  static canHaveComponent(modelid, componentid) {
     const result = __internal_omp.Vehicle.CanHaveComponent(
-      this.#ptr,
       modelid,
       componentid
     );
@@ -691,15 +668,8 @@ class Vehicle {
    * @returns {{ret: boolean, color1: number,color2: number,color3: number,color4: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getRandomColorPair(modelid) {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
-    const result = __internal_omp.Vehicle.GetRandomColorPair(
-      this.#ptr,
-      modelid
-    );
+  static getRandomColorPair(modelid) {
+    const result = __internal_omp.Vehicle.GetRandomColorPair(modelid);
     return result;
   }
 
@@ -710,16 +680,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  colorIndexToColor(colorIndex, alpha) {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
-    const result = __internal_omp.Vehicle.ColorIndexToColor(
-      this.#ptr,
-      colorIndex,
-      alpha
-    );
+  static colorIndexToColor(colorIndex, alpha) {
+    const result = __internal_omp.Vehicle.ColorIndexToColor(colorIndex, alpha);
     return result.ret;
   }
 
@@ -835,16 +797,8 @@ class Vehicle {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getModelInfo(vehiclemodel, infotype) {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
-    const result = __internal_omp.Vehicle.GetModelInfo(
-      this.#ptr,
-      vehiclemodel,
-      infotype
-    );
+  static getModelInfo(vehiclemodel, infotype) {
+    const result = __internal_omp.Vehicle.GetModelInfo(vehiclemodel, infotype);
     return result;
   }
 
@@ -977,12 +931,8 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  enableFriendlyFire() {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
-    const result = __internal_omp.Vehicle.EnableFriendlyFire(this.#ptr);
+  static enableFriendlyFire() {
+    const result = __internal_omp.Vehicle.EnableFriendlyFire();
     return result.ret;
   }
 
@@ -1050,12 +1000,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getModelCount(modelid) {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
-    const result = __internal_omp.Vehicle.GetModelCount(this.#ptr, modelid);
+  static getModelCount(modelid) {
+    const result = __internal_omp.Vehicle.GetModelCount(modelid);
     return result.ret;
   }
 
@@ -1064,12 +1010,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getModelsUsed() {
-    if (!this.#ptr) {
-      throw new Error("Vehicle instance is not valid");
-    }
-
-    const result = __internal_omp.Vehicle.GetModelsUsed(this.#ptr);
+  static getModelsUsed() {
+    const result = __internal_omp.Vehicle.GetModelsUsed();
     return result.ret;
   }
 

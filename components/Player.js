@@ -304,7 +304,7 @@ class Player {
 
   /**
    * @method getMenu
-   * @returns {number}
+   * @returns {Menu}
    * @throws Will throw an error if the player is invalid
    */
   getMenu() {
@@ -1490,7 +1490,7 @@ class Player {
 
   /**
    * @method getBuildingsRemoved
-   * @returns {boolean}
+   * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
   getBuildingsRemoved() {
@@ -1512,7 +1512,7 @@ class Player {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.RemoveFromVehicle(this.#ptr);
+    const result = __internal_omp.Player.RemoveFromVehicle(this.#ptr, false);
     return result.ret;
   }
 
@@ -1782,12 +1782,8 @@ class Player {
    * @returns {{ret: boolean, lib: string,name: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getAnimationName(index) {
-    if (!this.#ptr) {
-      throw new Error("Player instance is not valid");
-    }
-
-    const result = __internal_omp.Player.GetAnimationName(this.#ptr, index);
+  static getAnimationName(index) {
+    const result = __internal_omp.Player.GetAnimationName(index);
     return result;
   }
 
@@ -2030,7 +2026,7 @@ class Player {
   /**
    * @method isPlayerAttachedObjectSlotUsed
    * @param {number} index
-   * @returns {number}
+   * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
   isPlayerAttachedObjectSlotUsed(index) {
