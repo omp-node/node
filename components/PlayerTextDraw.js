@@ -44,7 +44,7 @@ class PlayerTextDraw {
         throw new Error("Failed to retrieve playerTextDraw");
       }
 
-      this.#ptr = BigInt(result.ret);
+      this.#ptr = omp.PTR(result.ret);
       this.#id = xOrId;
       this.#player = player;
       return;
@@ -56,7 +56,7 @@ class PlayerTextDraw {
     }
 
     this.#player = player;
-    this.#ptr = BigInt(result.ret);
+    this.#ptr = omp.PTR(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

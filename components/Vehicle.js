@@ -48,7 +48,7 @@ class Vehicle {
         throw new Error("Failed to retrieve vehicle");
       }
 
-      this.#ptr = BigInt(result.ret);
+      this.#ptr = omp.PTR(result.ret);
       this.#id = modelidOrId;
       return;
     }
@@ -68,7 +68,7 @@ class Vehicle {
       throw new Error("Failed to create vehicle");
     }
 
-    this.#ptr = BigInt(result.ret);
+    this.#ptr = omp.PTR(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

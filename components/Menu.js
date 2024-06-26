@@ -35,7 +35,7 @@ class Menu {
         throw new Error("Failed to retrieve menu");
       }
 
-      this.#ptr = BigInt(result.ret);
+      this.#ptr = omp.PTR(result.ret);
       this.#id = titleOrId;
       return;
     }
@@ -52,7 +52,7 @@ class Menu {
       throw new Error("Failed to create menu");
     }
 
-    this.#ptr = BigInt(result.ret);
+    this.#ptr = omp.PTR(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }

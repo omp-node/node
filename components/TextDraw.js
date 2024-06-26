@@ -32,7 +32,7 @@ class TextDraw {
         throw new Error("Failed to retrieve textDraw");
       }
 
-      this.#ptr = BigInt(result.ret);
+      this.#ptr = omp.PTR(result.ret);
       this.#id = xOrId;
       return;
     }
@@ -42,7 +42,7 @@ class TextDraw {
       throw new Error("Failed to create textDraw");
     }
 
-    this.#ptr = BigInt(result.ret);
+    this.#ptr = omp.PTR(result.ret);
     if (result.hasOwnProperty("id")) {
       this.#id = result.id;
     }
