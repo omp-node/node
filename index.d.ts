@@ -5958,7 +5958,7 @@ declare class PerPlayerEntityPool<T> {
    * @description Get player's entity pool
    * @param {number} playerid - player ID
    */
-  at(playerid: number): T[] | undefined;
+  at(playerid: number): T | undefined;
 }
 
 /*
