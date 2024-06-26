@@ -1416,7 +1416,7 @@ class Player {
 
   /**
    * @method getCameraTargetObject
-   * @returns {Object}
+   * @returns {ObjectMp}
    * @throws Will throw an error if the player is invalid
    */
   getCameraTargetObject() {
@@ -2043,7 +2043,7 @@ class Player {
 
   /**
    * @method attachCameraToObject
-   * @param {Object} object
+   * @param {ObjectMp} object
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
@@ -2061,7 +2061,7 @@ class Player {
 
   /**
    * @method attachCameraToPlayerObject
-   * @param {Object} object
+   * @param {ObjectMp} object
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
@@ -2149,7 +2149,7 @@ class Player {
 
   /**
    * @method getSurfingObject
-   * @returns {Object}
+   * @returns {ObjectMp}
    * @throws Will throw an error if the player is invalid
    */
   getSurfingObject() {

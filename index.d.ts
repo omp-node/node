@@ -1190,10 +1190,10 @@ declare class Player {
   getCameraTargetActor(): Actor;
   /**
    * @method getCameraTargetObject
-   * @returns {Object}
+   * @returns {ObjectMp}
    * @throws Will throw an error if the player is invalid
    */
-  getCameraTargetObject(): any;
+  getCameraTargetObject(): ObjectMp;
   /**
    * @method getCameraTargetVehicle
    * @returns {Vehicle}
@@ -1521,18 +1521,18 @@ declare class Player {
   isPlayerAttachedObjectSlotUsed(index: number): boolean;
   /**
    * @method attachCameraToObject
-   * @param {Object} object
+   * @param {ObjectMp} object
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  attachCameraToObject(object: any): boolean;
+  attachCameraToObject(object: ObjectMp): boolean;
   /**
    * @method attachCameraToPlayerObject
-   * @param {Object} object
+   * @param {ObjectMp} object
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  attachCameraToPlayerObject(object: any): boolean;
+  attachCameraToPlayerObject(object: ObjectMp): boolean;
   /**
    * @method getCameraAspectRatio
    * @returns {number}
@@ -1575,10 +1575,10 @@ declare class Player {
   getSurfingVehicle(): Vehicle;
   /**
    * @method getSurfingObject
-   * @returns {Object}
+   * @returns {ObjectMp}
    * @throws Will throw an error if the player is invalid
    */
-  getSurfingObject(): any;
+  getSurfingObject(): ObjectMp;
   /**
    * @method getTargetPlayer
    * @returns {Player}
@@ -2623,7 +2623,7 @@ declare class ObjectMp {
   ): boolean;
   /**
    * @method attachToObject
-   * @param {Object} objAttachedTo
+   * @param {ObjectMp} objAttachedTo
    * @param {number} offsetX
    * @param {number} offsetY
    * @param {number} offsetZ
@@ -2635,7 +2635,7 @@ declare class ObjectMp {
    * @throws Will throw an error if the object is invalid
    */
   attachToObject(
-    objAttachedTo: any,
+    objAttachedTo: ObjectMp,
     offsetX: number,
     offsetY: number,
     offsetZ: number,
@@ -5356,7 +5356,7 @@ declare class ObjectPool {
    * @param {number} rotationY
    * @param {number} rotationZ
    * @param {number} drawDistance
-   * @returns {ObjectMp} an Object instance
+   * @returns {ObjectMp} an ObjectMp instance
    * @throws Will throw an error if the object creation fails
    */
   new(
@@ -8134,7 +8134,7 @@ declare class omp {
    */
   static removeListener(
     eventName: "objectMove",
-    callback: (object: Object) => any
+    callback: (object: ObjectMp) => any
   ): void;
   /**
    * Removes a specific listener for playerObjectMove
@@ -8145,7 +8145,7 @@ declare class omp {
    */
   static removeListener(
     eventName: "playerObjectMove",
-    callback: (player: Player, object: Object) => any
+    callback: (player: Player, object: ObjectMp) => any
   ): void;
   /**
    * Removes a specific listener for playerEditObject

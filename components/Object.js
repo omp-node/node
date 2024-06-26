@@ -1,7 +1,7 @@
 /**
- * Object class
+ * ObjectMp class
  */
-class Object {
+class ObjectMp {
   /**
    * @var ptr
    * @description Object pointer
@@ -149,7 +149,7 @@ class Object {
 
   /**
    * @method attachToObject
-   * @param {Object} objAttachedTo
+   * @param {ObjectMp} objAttachedTo
    * @param {number} offsetX
    * @param {number} offsetY
    * @param {number} offsetZ
@@ -703,4 +703,4 @@ class Object {
   }
 }
 
-export default Object;
+export default ObjectMp;
