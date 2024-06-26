@@ -94,7 +94,7 @@ export class PlayerPool {
     this.#entries.forEach((value, key) => callback(value, key));
   }
 
-  add_INTERNAL_UNSAFE(entityOrId, retrieve = true) {
+  add_INTERNAL_UNSAFE(entityOrId, retrieve) {
     let entity = null;
     if (retrieve) {
       entity = new Player(entityOrId);
@@ -104,6 +104,13 @@ export class PlayerPool {
 
     this.#entityPtrs.set(entity.getID(), entity.getPtr());
     this.#entries.set(entity.getPtr(), entity);
+  }
+
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
   }
 
   entries_INTERNAL_UNSAFE() {
@@ -241,6 +248,13 @@ export class VehiclePool {
     this.#entries.set(entity.getPtr(), entity);
   }
 
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
+  }
+
   entries_INTERNAL_UNSAFE() {
     return this.#entries;
   }
@@ -374,6 +388,13 @@ export class ObjectPool {
     this.#entries.set(entity.getPtr(), entity);
   }
 
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
+  }
+
   entries_INTERNAL_UNSAFE() {
     return this.#entries;
   }
@@ -491,6 +512,13 @@ export class TextDrawPool {
 
     this.#entityPtrs.set(entity.getID(), entity.getPtr());
     this.#entries.set(entity.getPtr(), entity);
+  }
+
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
   }
 
   entries_INTERNAL_UNSAFE() {
@@ -615,6 +643,13 @@ export class PickupPool {
     this.#entries.set(entity.getPtr(), entity);
   }
 
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
+  }
+
   entries_INTERNAL_UNSAFE() {
     return this.#entries;
   }
@@ -733,6 +768,13 @@ export class GangZonePool {
 
     this.#entityPtrs.set(entity.getID(), entity.getPtr());
     this.#entries.set(entity.getPtr(), entity);
+  }
+
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
   }
 
   entries_INTERNAL_UNSAFE() {
@@ -868,6 +910,13 @@ export class TextLabelPool {
     this.#entries.set(entity.getPtr(), entity);
   }
 
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
+  }
+
   entries_INTERNAL_UNSAFE() {
     return this.#entries;
   }
@@ -987,6 +1036,13 @@ export class ActorPool {
 
     this.#entityPtrs.set(entity.getID(), entity.getPtr());
     this.#entries.set(entity.getPtr(), entity);
+  }
+
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
   }
 
   entries_INTERNAL_UNSAFE() {
@@ -1109,6 +1165,13 @@ export class MenuPool {
 
     this.#entityPtrs.set(entity.getID(), entity.getPtr());
     this.#entries.set(entity.getPtr(), entity);
+  }
+
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
   }
 
   entries_INTERNAL_UNSAFE() {
@@ -1256,6 +1319,13 @@ export class PlayerObjectPool {
 
     this.#entityPtrs.set(entity.getID(), entity.getPtr());
     this.#entries.set(entity.getPtr(), entity);
+  }
+
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
   }
 
   entries_INTERNAL_UNSAFE() {
@@ -1417,6 +1487,13 @@ export class PlayerTextLabelPool {
     this.#entries.set(entity.getPtr(), entity);
   }
 
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
+  }
+
   entries_INTERNAL_UNSAFE() {
     return this.#entries;
   }
@@ -1547,6 +1624,13 @@ export class PlayerTextDrawPool {
 
     this.#entityPtrs.set(entity.getID(), entity.getPtr());
     this.#entries.set(entity.getPtr(), entity);
+  }
+
+  remove_INTERNAL_UNSAFE(entity) {
+    if (entity) {
+      this.#entityPtrs.delete(entity.getID());
+      this.#entries.delete(entity.getPtr());
+    }
   }
 
   entries_INTERNAL_UNSAFE() {
