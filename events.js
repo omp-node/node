@@ -5,6 +5,213 @@ import EventEmitter from "events";
  * @type {EventEmitter}
  */
 const eventEmitter_raw = __internal_omp.eventEmitter_raw;
+// Internal playerPoolEntryCreate event handler
+eventEmitter_raw.on("playerPoolEntryCreate", async (_, entityId) => {
+  const entity = omp.players.at(entityId);
+  if (entity) {
+    omp.players.remove_INTERNAL_UNSAFE(entity);
+  }
+  omp.players.add_INTERNAL_UNSAFE(entityId, true);
+});
+
+// Internal playerPoolEntryDestroy event handler
+eventEmitter_raw.on("playerPoolEntryDestroy", async (_, entityId) => {
+  const entity = omp.players.at(entityId);
+  omp.players.remove_INTERNAL_UNSAFE(entity);
+});
+
+// Internal vehiclePoolEntryCreate event handler
+eventEmitter_raw.on("vehiclePoolEntryCreate", async (_, entityId) => {
+  const entity = omp.vehicles.at(entityId);
+  if (entity) {
+    omp.vehicles.remove_INTERNAL_UNSAFE(entity);
+  }
+  omp.vehicles.add_INTERNAL_UNSAFE(entityId, true);
+});
+
+// Internal vehiclePoolEntryDestroy event handler
+eventEmitter_raw.on("vehiclePoolEntryDestroy", async (_, entityId) => {
+  const entity = omp.vehicles.at(entityId);
+  omp.vehicles.remove_INTERNAL_UNSAFE(entity);
+});
+
+// Internal objectPoolEntryCreate event handler
+eventEmitter_raw.on("objectPoolEntryCreate", async (_, entityId) => {
+  const entity = omp.objects.at(entityId);
+  if (entity) {
+    omp.objects.remove_INTERNAL_UNSAFE(entity);
+  }
+  omp.objects.add_INTERNAL_UNSAFE(entityId, true);
+});
+
+// Internal objectPoolEntryDestroy event handler
+eventEmitter_raw.on("objectPoolEntryDestroy", async (_, entityId) => {
+  const entity = omp.objects.at(entityId);
+  omp.objects.remove_INTERNAL_UNSAFE(entity);
+});
+
+// Internal textdrawPoolEntryCreate event handler
+eventEmitter_raw.on("textdrawPoolEntryCreate", async (_, entityId) => {
+  const entity = omp.textdraws.at(entityId);
+  if (entity) {
+    omp.textdraws.remove_INTERNAL_UNSAFE(entity);
+  }
+  omp.textdraws.add_INTERNAL_UNSAFE(entityId, true);
+});
+
+// Internal textdrawPoolEntryDestroy event handler
+eventEmitter_raw.on("textdrawPoolEntryDestroy", async (_, entityId) => {
+  const entity = omp.textdraws.at(entityId);
+  omp.textdraws.remove_INTERNAL_UNSAFE(entity);
+});
+
+// Internal pickupPoolEntryCreate event handler
+eventEmitter_raw.on("pickupPoolEntryCreate", async (_, entityId) => {
+  const entity = omp.pickups.at(entityId);
+  if (entity) {
+    omp.pickups.remove_INTERNAL_UNSAFE(entity);
+  }
+  omp.pickups.add_INTERNAL_UNSAFE(entityId, true);
+});
+
+// Internal pickupPoolEntryDestroy event handler
+eventEmitter_raw.on("pickupPoolEntryDestroy", async (_, entityId) => {
+  const entity = omp.pickups.at(entityId);
+  omp.pickups.remove_INTERNAL_UNSAFE(entity);
+});
+
+// Internal gangzonePoolEntryCreate event handler
+eventEmitter_raw.on("gangzonePoolEntryCreate", async (_, entityId) => {
+  const entity = omp.gangzones.at(entityId);
+  if (entity) {
+    omp.gangzones.remove_INTERNAL_UNSAFE(entity);
+  }
+  omp.gangzones.add_INTERNAL_UNSAFE(entityId, true);
+});
+
+// Internal gangzonePoolEntryDestroy event handler
+eventEmitter_raw.on("gangzonePoolEntryDestroy", async (_, entityId) => {
+  const entity = omp.gangzones.at(entityId);
+  omp.gangzones.remove_INTERNAL_UNSAFE(entity);
+});
+
+// Internal textlabelPoolEntryCreate event handler
+eventEmitter_raw.on("textlabelPoolEntryCreate", async (_, entityId) => {
+  const entity = omp.textlabels.at(entityId);
+  if (entity) {
+    omp.textlabels.remove_INTERNAL_UNSAFE(entity);
+  }
+  omp.textlabels.add_INTERNAL_UNSAFE(entityId, true);
+});
+
+// Internal textlabelPoolEntryDestroy event handler
+eventEmitter_raw.on("textlabelPoolEntryDestroy", async (_, entityId) => {
+  const entity = omp.textlabels.at(entityId);
+  omp.textlabels.remove_INTERNAL_UNSAFE(entity);
+});
+
+// Internal actorPoolEntryCreate event handler
+eventEmitter_raw.on("actorPoolEntryCreate", async (_, entityId) => {
+  const entity = omp.actors.at(entityId);
+  if (entity) {
+    omp.actors.remove_INTERNAL_UNSAFE(entity);
+  }
+  omp.actors.add_INTERNAL_UNSAFE(entityId, true);
+});
+
+// Internal actorPoolEntryDestroy event handler
+eventEmitter_raw.on("actorPoolEntryDestroy", async (_, entityId) => {
+  const entity = omp.actors.at(entityId);
+  omp.actors.remove_INTERNAL_UNSAFE(entity);
+});
+
+// Internal menuPoolEntryCreate event handler
+eventEmitter_raw.on("menuPoolEntryCreate", async (_, entityId) => {
+  const entity = omp.menus.at(entityId);
+  if (entity) {
+    omp.menus.remove_INTERNAL_UNSAFE(entity);
+  }
+  omp.menus.add_INTERNAL_UNSAFE(entityId, true);
+});
+
+// Internal menuPoolEntryDestroy event handler
+eventEmitter_raw.on("menuPoolEntryDestroy", async (_, entityId) => {
+  const entity = omp.menus.at(entityId);
+  omp.menus.remove_INTERNAL_UNSAFE(entity);
+});
+
+// Internal playerObjectPoolEntryCreate event handler
+eventEmitter_raw.on(
+  "playerObjectPoolEntryCreate",
+  async (_, playerId, entityId) => {
+    const playerPool = omp.playerObjects.at(playerId);
+    if (playerPool) {
+      const entity = playerPool.at(entityId);
+      if (entity) {
+        playerPool.remove_INTERNAL_UNSAFE(entity);
+      }
+      playerPool.add_INTERNAL_UNSAFE(entityId, true);
+    }
+  }
+);
+
+// Internal playerObjectPoolEntryDestroy event handler
+eventEmitter_raw.on("playerObjectPoolEntryDestroy", async (_, entityId) => {
+  const playerPool = omp.playerObjects.at(playerId);
+  if (playerPool) {
+    const entity = playerPool.at(entityId);
+    playerPool.remove_INTERNAL_UNSAFE(entity);
+  }
+});
+
+// Internal playerTextLabelPoolEntryCreate event handler
+eventEmitter_raw.on(
+  "playerTextLabelPoolEntryCreate",
+  async (_, playerId, entityId) => {
+    const playerPool = omp.playerTextLabels.at(playerId);
+    if (playerPool) {
+      const entity = playerPool.at(entityId);
+      if (entity) {
+        playerPool.remove_INTERNAL_UNSAFE(entity);
+      }
+      playerPool.add_INTERNAL_UNSAFE(entityId, true);
+    }
+  }
+);
+
+// Internal playerTextLabelPoolEntryDestroy event handler
+eventEmitter_raw.on("playerTextLabelPoolEntryDestroy", async (_, entityId) => {
+  const playerPool = omp.playerTextLabels.at(playerId);
+  if (playerPool) {
+    const entity = playerPool.at(entityId);
+    playerPool.remove_INTERNAL_UNSAFE(entity);
+  }
+});
+
+// Internal playerTextDrawPoolEntryCreate event handler
+eventEmitter_raw.on(
+  "playerTextDrawPoolEntryCreate",
+  async (_, playerId, entityId) => {
+    const playerPool = omp.playerTextDraws.at(playerId);
+    if (playerPool) {
+      const entity = playerPool.at(entityId);
+      if (entity) {
+        playerPool.remove_INTERNAL_UNSAFE(entity);
+      }
+      playerPool.add_INTERNAL_UNSAFE(entityId, true);
+    }
+  }
+);
+
+// Internal playerTextDrawPoolEntryDestroy event handler
+eventEmitter_raw.on("playerTextDrawPoolEntryDestroy", async (_, entityId) => {
+  const playerPool = omp.playerTextDraws.at(playerId);
+  if (playerPool) {
+    const entity = playerPool.at(entityId);
+    playerPool.remove_INTERNAL_UNSAFE(entity);
+  }
+});
+
 // Internal playerGiveDamageActor event handler
 eventEmitter_raw.on(
   "playerGiveDamageActor",
