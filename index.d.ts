@@ -645,10 +645,10 @@ declare class Player {
   };
   /**
    * @method getMenu
-   * @returns {number}
+   * @returns {Menu}
    * @throws Will throw an error if the player is invalid
    */
-  getMenu(): number;
+  getMenu(): Menu;
   /**
    * @method getSurfingPlayerObject
    * @returns {PlayerObject}
@@ -1227,10 +1227,10 @@ declare class Player {
   ): boolean;
   /**
    * @method getBuildingsRemoved
-   * @returns {boolean}
+   * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getBuildingsRemoved(): boolean;
+  getBuildingsRemoved(): number;
   /**
    * @method removeFromVehicle
    * @returns {boolean}
@@ -1378,7 +1378,7 @@ declare class Player {
    * @returns {{ret: boolean, lib: string,name: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getAnimationName(index: number): {
+  static getAnimationName(index: number): {
     ret: boolean;
     lib: string;
     name: string;
@@ -1515,10 +1515,10 @@ declare class Player {
   /**
    * @method isPlayerAttachedObjectSlotUsed
    * @param {number} index
-   * @returns {number}
+   * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isPlayerAttachedObjectSlotUsed(index: number): number;
+  isPlayerAttachedObjectSlotUsed(index: number): boolean;
   /**
    * @method attachCameraToObject
    * @param {Object} object
@@ -3445,35 +3445,35 @@ declare class PlayerTextDraw {
    */
   isVisible(): boolean;
   /**
-   * @method letterSize
+   * @method setLetterSize
    * @param {number} x
    * @param {number} y
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  letterSize(x: number, y: number): boolean;
+  setLetterSize(x: number, y: number): boolean;
   /**
-   * @method textSize
+   * @method setTextSize
    * @param {number} x
    * @param {number} y
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  textSize(x: number, y: number): boolean;
+  setTextSize(x: number, y: number): boolean;
   /**
-   * @method alignment
+   * @method setAlignment
    * @param {number} alignment
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  alignment(alignment: number): boolean;
+  setAlignment(alignment: number): boolean;
   /**
-   * @method color
+   * @method setColor
    * @param {number} color
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  color(color: number): boolean;
+  setColor(color: number): boolean;
   /**
    * @method useBox
    * @param {boolean} use
@@ -3482,12 +3482,12 @@ declare class PlayerTextDraw {
    */
   useBox(use: boolean): boolean;
   /**
-   * @method boxColor
+   * @method setBoxColor
    * @param {number} color
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  boxColor(color: number): boolean;
+  setBoxColor(color: number): boolean;
   /**
    * @method setShadow
    * @param {number} size
@@ -3503,19 +3503,19 @@ declare class PlayerTextDraw {
    */
   setOutline(size: number): boolean;
   /**
-   * @method backgroundColor
+   * @method setBackgroundColor
    * @param {number} color
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  backgroundColor(color: number): boolean;
+  setBackgroundColor(color: number): boolean;
   /**
-   * @method font
+   * @method setFont
    * @param {number} font
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  font(font: number): boolean;
+  setFont(font: number): boolean;
   /**
    * @method setProportional
    * @param {boolean} set
@@ -4423,7 +4423,7 @@ declare class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getMaxPassengerSeats(modelid: number): number;
+  static getMaxPassengerSeats(modelid: number): number;
   /**
    * @method isStreamedIn
    * @param {Player} player
@@ -4499,7 +4499,7 @@ declare class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  useManualEngineAndLights(): boolean;
+  static useManualEngineAndLights(): boolean;
   /**
    * @method setParamsEx
    * @param {number} engine
@@ -4702,7 +4702,7 @@ declare class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getComponentType(componentid: number): number;
+  static getComponentType(componentid: number): number;
   /**
    * @method canHaveComponent
    * @param {number} modelid
@@ -4710,14 +4710,14 @@ declare class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  canHaveComponent(modelid: number, componentid: number): boolean;
+  static canHaveComponent(modelid: number, componentid: number): boolean;
   /**
    * @method getRandomColorPair
    * @param {number} modelid
    * @returns {{ret: boolean, color1: number,color2: number,color3: number,color4: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getRandomColorPair(modelid: number): {
+  static getRandomColorPair(modelid: number): {
     ret: boolean;
     color1: number;
     color2: number;
@@ -4731,7 +4731,7 @@ declare class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  colorIndexToColor(colorIndex: number, alpha: number): number;
+  static colorIndexToColor(colorIndex: number, alpha: number): number;
   /**
    * @method repair
    * @returns {boolean}
@@ -4801,7 +4801,7 @@ declare class Vehicle {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getModelInfo(
+  static getModelInfo(
     vehiclemodel: number,
     infotype: number
   ): {
@@ -4892,7 +4892,7 @@ declare class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  enableFriendlyFire(): boolean;
+  static enableFriendlyFire(): boolean;
   /**
    * @method getSpawnInfo
    * @returns {{ret: boolean, x: number,y: number,z: number,rotation: number,color1: number,color2: number}} return object
@@ -4938,13 +4938,13 @@ declare class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getModelCount(modelid: number): number;
+  static getModelCount(modelid: number): number;
   /**
    * @method getModelsUsed
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getModelsUsed(): number;
+  static getModelsUsed(): number;
   /**
    * @method getPaintjob
    * @returns {number}
