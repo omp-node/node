@@ -1,26 +1,25 @@
+import { Player } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * Pickup class
  */
-class Pickup {
+export default class Pickup {
   /**
-   * @var ptr
-   * @description Pickup pointer
-   * @type {number|null}
    * @private
+   * @var {number|null} Pickup pointer
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
-   * @var id
-   * @description Pickup ID
-   * @type {number|null}
    * @private
+   * @var {number|null} Pickup ID
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @constructor
-   * @param {number} modelOrId
+   * @param {number} model
    * @param {number} type
    * @param {number} x
    * @param {number} y
@@ -28,20 +27,36 @@ class Pickup {
    * @param {number} virtualWorld
    * @throws Will throw an error if the pickup creation fails
    */
-  constructor(modelOrId, type, x, y, z, virtualWorld) {
-    if (type === undefined && x === undefined) {
-      const result = __internal_omp.Pickup.FromID(modelOrId);
+  constructor(
+    model: number,
+    type: number,
+    x: number,
+    y: number,
+    z: number,
+    virtualWorld: number
+  );
+
+  constructor(
+    model: number,
+    type?: number,
+    x?: number,
+    y?: number,
+    z?: number,
+    virtualWorld?: number
+  ) {
+    if (arguments.length < 2) {
+      const result = internal_omp.Pickup.FromID(model);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve pickup");
+        throw new Error("Failed to create pickup");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = modelOrId;
+      this.ptr = PTR(result.ret);
+      this.id = model;
       return;
     }
 
-    const result = __internal_omp.Pickup.Create(
-      modelOrId,
+    const result = internal_omp.Pickup.Create(
+      model,
       type,
       x,
       y,
@@ -52,9 +67,9 @@ class Pickup {
       throw new Error("Failed to create pickup");
     }
 
-    this.#ptr = omp.PTR(result.ret);
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -63,18 +78,18 @@ class Pickup {
    * @param {number} id
    * @throws Will throw an error if the pickup retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): void {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
-      return true;
+      this.ptr = null;
+      this.id = null;
+      return;
     } else {
-      return false;
+      return;
     }
   }
 
@@ -83,8 +98,8 @@ class Pickup {
    * @description get pickup pointer
    * @returns {number|null} pickup pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -92,8 +107,8 @@ class Pickup {
    * @description get pickup id
    * @returns {number|null} pickup id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -107,13 +122,20 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  addStatic(model, type, x, y, z, virtualWorld) {
-    if (!this.#ptr) {
+  addStatic(
+    model: number,
+    type: number,
+    x: number,
+    y: number,
+    z: number,
+    virtualWorld: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.AddStatic(
-      this.#ptr,
+    const result = internal_omp.Pickup.AddStatic(
+      this.ptr,
       model,
       type,
       x,
@@ -129,12 +151,12 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  isValid() {
-    if (!this.#ptr) {
+  isValid(): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.IsValid(this.#ptr);
+    const result = internal_omp.Pickup.IsValid(this.ptr);
     return result.ret;
   }
 
@@ -144,15 +166,12 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  isStreamedIn(player) {
-    if (!this.#ptr) {
+  isStreamedIn(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.IsStreamedIn(
-      player.getPtr(),
-      this.#ptr
-    );
+    const result = internal_omp.Pickup.IsStreamedIn(player.getPtr(), this.ptr);
     return result.ret;
   }
 
@@ -161,12 +180,12 @@ class Pickup {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the pickup is invalid
    */
-  getPos() {
-    if (!this.#ptr) {
+  getPos(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.GetPos(this.#ptr);
+    const result = internal_omp.Pickup.GetPos(this.ptr);
     return result;
   }
 
@@ -175,12 +194,12 @@ class Pickup {
    * @returns {number}
    * @throws Will throw an error if the pickup is invalid
    */
-  getModel() {
-    if (!this.#ptr) {
+  getModel(): number {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.GetModel(this.#ptr);
+    const result = internal_omp.Pickup.GetModel(this.ptr);
     return result.ret;
   }
 
@@ -189,12 +208,12 @@ class Pickup {
    * @returns {number}
    * @throws Will throw an error if the pickup is invalid
    */
-  getType() {
-    if (!this.#ptr) {
+  getType(): number {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.GetType(this.#ptr);
+    const result = internal_omp.Pickup.GetType(this.ptr);
     return result.ret;
   }
 
@@ -203,12 +222,12 @@ class Pickup {
    * @returns {number}
    * @throws Will throw an error if the pickup is invalid
    */
-  getVirtualWorld() {
-    if (!this.#ptr) {
+  getVirtualWorld(): number {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.GetVirtualWorld(this.#ptr);
+    const result = internal_omp.Pickup.GetVirtualWorld(this.ptr);
     return result.ret;
   }
 
@@ -221,12 +240,12 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  setPos(x, y, z, update) {
-    if (!this.#ptr) {
+  setPos(x: number, y: number, z: number, update: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.SetPos(this.#ptr, x, y, z, update);
+    const result = internal_omp.Pickup.SetPos(this.ptr, x, y, z, update);
     return result.ret;
   }
 
@@ -237,12 +256,12 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  setModel(model, update) {
-    if (!this.#ptr) {
+  setModel(model: number, update: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.SetModel(this.#ptr, model, update);
+    const result = internal_omp.Pickup.SetModel(this.ptr, model, update);
     return result.ret;
   }
 
@@ -253,12 +272,12 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  setType(type, update) {
-    if (!this.#ptr) {
+  setType(type: number, update: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.SetType(this.#ptr, type, update);
+    const result = internal_omp.Pickup.SetType(this.ptr, type, update);
     return result.ret;
   }
 
@@ -268,15 +287,12 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  setVirtualWorld(virtualworld) {
-    if (!this.#ptr) {
+  setVirtualWorld(virtualworld: number): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.SetVirtualWorld(
-      this.#ptr,
-      virtualworld
-    );
+    const result = internal_omp.Pickup.SetVirtualWorld(this.ptr, virtualworld);
     return result.ret;
   }
 
@@ -286,15 +302,12 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  showForPlayer(player) {
-    if (!this.#ptr) {
+  showForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.ShowForPlayer(
-      player.getPtr(),
-      this.#ptr
-    );
+    const result = internal_omp.Pickup.ShowForPlayer(player.getPtr(), this.ptr);
     return result.ret;
   }
 
@@ -304,15 +317,12 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  hideForPlayer(player) {
-    if (!this.#ptr) {
+  hideForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.HideForPlayer(
-      player.getPtr(),
-      this.#ptr
-    );
+    const result = internal_omp.Pickup.HideForPlayer(player.getPtr(), this.ptr);
     return result.ret;
   }
 
@@ -322,17 +332,15 @@ class Pickup {
    * @returns {boolean}
    * @throws Will throw an error if the pickup is invalid
    */
-  isHiddenForPlayer(player) {
-    if (!this.#ptr) {
+  isHiddenForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Pickup instance is not valid");
     }
 
-    const result = __internal_omp.Pickup.IsHiddenForPlayer(
+    const result = internal_omp.Pickup.IsHiddenForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
 }
-
-export default Pickup;

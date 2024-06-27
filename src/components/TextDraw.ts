@@ -1,14 +1,17 @@
+import { Player } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * TextDraw class
  */
-class TextDraw {
+export default class TextDraw {
   /**
    * @var ptr
    * @description TextDraw pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,35 +19,37 @@ class TextDraw {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @constructor
-   * @param {number} xOrId
+   * @param {number} x
    * @param {number} y
    * @param {string} text
    * @throws Will throw an error if the textDraw creation fails
    */
-  constructor(xOrId, y, text) {
-    if (y === undefined && text === undefined) {
-      const result = __internal_omp.TextDraw.FromID(xOrId);
+  constructor(x: number, y: number, text: string);
+
+  constructor(x: number, y?: number, text?: string) {
+    if (arguments.length < 2) {
+      const result = internal_omp.TextDraw.FromID(x);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve textDraw");
+        throw new Error("Failed to create textdraw");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = xOrId;
+      this.ptr = PTR(result.ret);
+      this.id = x;
       return;
     }
 
-    const result = __internal_omp.TextDraw.Create(xOrId, y, text);
+    const result = internal_omp.TextDraw.Create(x, y!, text!);
     if (result.ret === 0) {
       throw new Error("Failed to create textDraw");
     }
 
-    this.#ptr = omp.PTR(result.ret);
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -53,15 +58,15 @@ class TextDraw {
    * @param {number} id
    * @throws Will throw an error if the textDraw retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
+      this.ptr = null;
+      this.id = null;
       return true;
     } else {
       return false;
@@ -73,8 +78,8 @@ class TextDraw {
    * @description get textDraw pointer
    * @returns {number|null} textDraw pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -82,8 +87,8 @@ class TextDraw {
    * @description get textDraw id
    * @returns {number|null} textDraw id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -91,12 +96,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  isValid() {
-    if (!this.#ptr) {
+  isValid(): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.IsValid(this.#ptr);
+    const result = internal_omp.TextDraw.IsValid(this.ptr);
     return result.ret;
   }
 
@@ -106,14 +111,14 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  isVisibleForPlayer(player) {
-    if (!this.#ptr) {
+  isVisibleForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.IsVisibleForPlayer(
+    const result = internal_omp.TextDraw.IsVisibleForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
@@ -125,16 +130,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setLetterSize(sizeX, sizeY) {
-    if (!this.#ptr) {
+  setLetterSize(sizeX: number, sizeY: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetLetterSize(
-      this.#ptr,
-      sizeX,
-      sizeY
-    );
+    const result = internal_omp.TextDraw.SetLetterSize(this.ptr, sizeX, sizeY);
     return result.ret;
   }
 
@@ -145,12 +146,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setTextSize(sizeX, sizeY) {
-    if (!this.#ptr) {
+  setTextSize(sizeX: number, sizeY: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetTextSize(this.#ptr, sizeX, sizeY);
+    const result = internal_omp.TextDraw.SetTextSize(this.ptr, sizeX, sizeY);
     return result.ret;
   }
 
@@ -160,12 +161,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setAlignment(alignment) {
-    if (!this.#ptr) {
+  setAlignment(alignment: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetAlignment(this.#ptr, alignment);
+    const result = internal_omp.TextDraw.SetAlignment(this.ptr, alignment);
     return result.ret;
   }
 
@@ -175,12 +176,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setColor(color) {
-    if (!this.#ptr) {
+  setColor(color: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetColor(this.#ptr, color);
+    const result = internal_omp.TextDraw.SetColor(this.ptr, color);
     return result.ret;
   }
 
@@ -190,12 +191,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setUseBox(use) {
-    if (!this.#ptr) {
+  setUseBox(use: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetUseBox(this.#ptr, use);
+    const result = internal_omp.TextDraw.SetUseBox(this.ptr, use);
     return result.ret;
   }
 
@@ -205,12 +206,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setBoxColor(color) {
-    if (!this.#ptr) {
+  setBoxColor(color: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetBoxColor(this.#ptr, color);
+    const result = internal_omp.TextDraw.SetBoxColor(this.ptr, color);
     return result.ret;
   }
 
@@ -220,12 +221,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setShadow(size) {
-    if (!this.#ptr) {
+  setShadow(size: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetShadow(this.#ptr, size);
+    const result = internal_omp.TextDraw.SetShadow(this.ptr, size);
     return result.ret;
   }
 
@@ -235,12 +236,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setOutline(size) {
-    if (!this.#ptr) {
+  setOutline(size: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetOutline(this.#ptr, size);
+    const result = internal_omp.TextDraw.SetOutline(this.ptr, size);
     return result.ret;
   }
 
@@ -250,12 +251,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setBackgroundColor(color) {
-    if (!this.#ptr) {
+  setBackgroundColor(color: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetBackgroundColor(this.#ptr, color);
+    const result = internal_omp.TextDraw.SetBackgroundColor(this.ptr, color);
     return result.ret;
   }
 
@@ -265,27 +266,27 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setFont(font) {
-    if (!this.#ptr) {
+  setFont(font: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetFont(this.#ptr, font);
+    const result = internal_omp.TextDraw.SetFont(this.ptr, font);
     return result.ret;
   }
 
   /**
-   * @method setSetProportional
+   * @method setProportional
    * @param {boolean} set
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setSetProportional(set) {
-    if (!this.#ptr) {
+  setProportional(set: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetSetProportional(this.#ptr, set);
+    const result = internal_omp.TextDraw.SetProportional(this.ptr, set);
     return result.ret;
   }
 
@@ -295,12 +296,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setSelectable(set) {
-    if (!this.#ptr) {
+  setSelectable(set: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetSelectable(this.#ptr, set);
+    const result = internal_omp.TextDraw.SetSelectable(this.ptr, set);
     return result.ret;
   }
 
@@ -310,14 +311,14 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  showForPlayer(player) {
-    if (!this.#ptr) {
+  showForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.ShowForPlayer(
+    const result = internal_omp.TextDraw.ShowForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
@@ -328,14 +329,14 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  hideForPlayer(player) {
-    if (!this.#ptr) {
+  hideForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.HideForPlayer(
+    const result = internal_omp.TextDraw.HideForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
@@ -345,12 +346,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  showForAll() {
-    if (!this.#ptr) {
+  showForAll(): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.ShowForAll(this.#ptr);
+    const result = internal_omp.TextDraw.ShowForAll(this.ptr);
     return result.ret;
   }
 
@@ -359,12 +360,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  hideForAll() {
-    if (!this.#ptr) {
+  hideForAll(): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.HideForAll(this.#ptr);
+    const result = internal_omp.TextDraw.HideForAll(this.ptr);
     return result.ret;
   }
 
@@ -374,12 +375,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setString(text) {
-    if (!this.#ptr) {
+  setString(text: string): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetString(this.#ptr, text);
+    const result = internal_omp.TextDraw.SetString(this.ptr, text);
     return result.ret;
   }
 
@@ -389,12 +390,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setPreviewModel(model) {
-    if (!this.#ptr) {
+  setPreviewModel(model: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetPreviewModel(this.#ptr, model);
+    const result = internal_omp.TextDraw.SetPreviewModel(this.ptr, model);
     return result.ret;
   }
 
@@ -407,13 +408,18 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setPreviewRot(rotationX, rotationY, rotationZ, zoom) {
-    if (!this.#ptr) {
+  setPreviewRot(
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number,
+    zoom: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetPreviewRot(
-      this.#ptr,
+    const result = internal_omp.TextDraw.SetPreviewRot(
+      this.ptr,
       rotationX,
       rotationY,
       rotationZ,
@@ -429,13 +435,13 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setPreviewVehCol(color1, color2) {
-    if (!this.#ptr) {
+  setPreviewVehCol(color1: number, color2: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetPreviewVehCol(
-      this.#ptr,
+    const result = internal_omp.TextDraw.SetPreviewVehCol(
+      this.ptr,
       color1,
       color2
     );
@@ -449,12 +455,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setPos(x, y) {
-    if (!this.#ptr) {
+  setPos(x: number, y: number): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetPos(this.#ptr, x, y);
+    const result = internal_omp.TextDraw.SetPos(this.ptr, x, y);
     return result.ret;
   }
 
@@ -463,12 +469,12 @@ class TextDraw {
    * @returns {{ret: boolean, text: string}} return object
    * @throws Will throw an error if the textDraw is invalid
    */
-  getString() {
-    if (!this.#ptr) {
+  getString(): { ret: boolean; text: string } {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetString(this.#ptr);
+    const result = internal_omp.TextDraw.GetString(this.ptr);
     return result;
   }
 
@@ -477,12 +483,12 @@ class TextDraw {
    * @returns {{ret: boolean, sizeX: number,sizeY: number}} return object
    * @throws Will throw an error if the textDraw is invalid
    */
-  getLetterSize() {
-    if (!this.#ptr) {
+  getLetterSize(): { ret: boolean; sizeX: number; sizeY: number } {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetLetterSize(this.#ptr);
+    const result = internal_omp.TextDraw.GetLetterSize(this.ptr);
     return result;
   }
 
@@ -491,12 +497,12 @@ class TextDraw {
    * @returns {{ret: boolean, sizeX: number,sizeY: number}} return object
    * @throws Will throw an error if the textDraw is invalid
    */
-  getTextSize() {
-    if (!this.#ptr) {
+  getTextSize(): { ret: boolean; sizeX: number; sizeY: number } {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetTextSize(this.#ptr);
+    const result = internal_omp.TextDraw.GetTextSize(this.ptr);
     return result;
   }
 
@@ -505,12 +511,12 @@ class TextDraw {
    * @returns {{ret: boolean, x: number,y: number}} return object
    * @throws Will throw an error if the textDraw is invalid
    */
-  getPos() {
-    if (!this.#ptr) {
+  getPos(): { ret: boolean; x: number; y: number } {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetPos(this.#ptr);
+    const result = internal_omp.TextDraw.GetPos(this.ptr);
     return result;
   }
 
@@ -519,12 +525,12 @@ class TextDraw {
    * @returns {number}
    * @throws Will throw an error if the textDraw is invalid
    */
-  getColor() {
-    if (!this.#ptr) {
+  getColor(): number {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetColor(this.#ptr);
+    const result = internal_omp.TextDraw.GetColor(this.ptr);
     return result.ret;
   }
 
@@ -533,12 +539,12 @@ class TextDraw {
    * @returns {number}
    * @throws Will throw an error if the textDraw is invalid
    */
-  getBoxColor() {
-    if (!this.#ptr) {
+  getBoxColor(): number {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetBoxColor(this.#ptr);
+    const result = internal_omp.TextDraw.GetBoxColor(this.ptr);
     return result.ret;
   }
 
@@ -547,12 +553,12 @@ class TextDraw {
    * @returns {number}
    * @throws Will throw an error if the textDraw is invalid
    */
-  getBackgroundColor() {
-    if (!this.#ptr) {
+  getBackgroundColor(): number {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetBackgroundColor(this.#ptr);
+    const result = internal_omp.TextDraw.GetBackgroundColor(this.ptr);
     return result.ret;
   }
 
@@ -561,12 +567,12 @@ class TextDraw {
    * @returns {number}
    * @throws Will throw an error if the textDraw is invalid
    */
-  getShadow() {
-    if (!this.#ptr) {
+  getShadow(): number {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetShadow(this.#ptr);
+    const result = internal_omp.TextDraw.GetShadow(this.ptr);
     return result.ret;
   }
 
@@ -575,12 +581,12 @@ class TextDraw {
    * @returns {number}
    * @throws Will throw an error if the textDraw is invalid
    */
-  getOutline() {
-    if (!this.#ptr) {
+  getOutline(): number {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetOutline(this.#ptr);
+    const result = internal_omp.TextDraw.GetOutline(this.ptr);
     return result.ret;
   }
 
@@ -589,12 +595,12 @@ class TextDraw {
    * @returns {number}
    * @throws Will throw an error if the textDraw is invalid
    */
-  getFont() {
-    if (!this.#ptr) {
+  getFont(): number {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetFont(this.#ptr);
+    const result = internal_omp.TextDraw.GetFont(this.ptr);
     return result.ret;
   }
 
@@ -603,12 +609,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  isBox() {
-    if (!this.#ptr) {
+  isBox(): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.IsBox(this.#ptr);
+    const result = internal_omp.TextDraw.IsBox(this.ptr);
     return result.ret;
   }
 
@@ -617,12 +623,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  isProportional() {
-    if (!this.#ptr) {
+  isProportional(): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.IsProportional(this.#ptr);
+    const result = internal_omp.TextDraw.IsProportional(this.ptr);
     return result.ret;
   }
 
@@ -631,12 +637,12 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  isSelectable() {
-    if (!this.#ptr) {
+  isSelectable(): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.IsSelectable(this.#ptr);
+    const result = internal_omp.TextDraw.IsSelectable(this.ptr);
     return result.ret;
   }
 
@@ -645,12 +651,12 @@ class TextDraw {
    * @returns {number}
    * @throws Will throw an error if the textDraw is invalid
    */
-  getAlignment() {
-    if (!this.#ptr) {
+  getAlignment(): number {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetAlignment(this.#ptr);
+    const result = internal_omp.TextDraw.GetAlignment(this.ptr);
     return result.ret;
   }
 
@@ -659,12 +665,12 @@ class TextDraw {
    * @returns {number}
    * @throws Will throw an error if the textDraw is invalid
    */
-  getPreviewModel() {
-    if (!this.#ptr) {
+  getPreviewModel(): number {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetPreviewModel(this.#ptr);
+    const result = internal_omp.TextDraw.GetPreviewModel(this.ptr);
     return result.ret;
   }
 
@@ -673,12 +679,18 @@ class TextDraw {
    * @returns {{ret: boolean, x: number,y: number,z: number,zoom: number}} return object
    * @throws Will throw an error if the textDraw is invalid
    */
-  getPreviewRot() {
-    if (!this.#ptr) {
+  getPreviewRot(): {
+    ret: boolean;
+    x: number;
+    y: number;
+    z: number;
+    zoom: number;
+  } {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetPreviewRot(this.#ptr);
+    const result = internal_omp.TextDraw.GetPreviewRot(this.ptr);
     return result;
   }
 
@@ -687,12 +699,12 @@ class TextDraw {
    * @returns {{ret: boolean, color1: number,color2: number}} return object
    * @throws Will throw an error if the textDraw is invalid
    */
-  getPreviewVehColor() {
-    if (!this.#ptr) {
+  getPreviewVehColor(): { ret: boolean; color1: number; color2: number } {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.GetPreviewVehColor(this.#ptr);
+    const result = internal_omp.TextDraw.GetPreviewVehColor(this.ptr);
     return result;
   }
 
@@ -703,18 +715,16 @@ class TextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the textDraw is invalid
    */
-  setStringForPlayer(player, text) {
-    if (!this.#ptr) {
+  setStringForPlayer(player: Player, text: string): boolean {
+    if (!this.ptr) {
       throw new Error("TextDraw instance is not valid");
     }
 
-    const result = __internal_omp.TextDraw.SetStringForPlayer(
-      this.#ptr,
+    const result = internal_omp.TextDraw.SetStringForPlayer(
+      this.ptr,
       player.getPtr(),
       text
     );
     return result.ret;
   }
 }
-
-export default TextDraw;

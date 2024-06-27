@@ -1,14 +1,17 @@
+import { Player, Vehicle, omp } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * ObjectMp class
  */
-class ObjectMp {
+export default class ObjectMp {
   /**
    * @var ptr
    * @description Object pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,11 +19,11 @@ class ObjectMp {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @constructor
-   * @param {number} modelidOrId
+   * @param {number} modelid
    * @param {number} x
    * @param {number} y
    * @param {number} z
@@ -31,43 +34,54 @@ class ObjectMp {
    * @throws Will throw an error if the object creation fails
    */
   constructor(
-    modelidOrId,
-    x,
-    y,
-    z,
-    rotationX,
-    rotationY,
-    rotationZ,
-    drawDistance
+    modelid: number,
+    x: number,
+    y: number,
+    z: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number,
+    drawDistance: number
+  );
+
+  constructor(
+    modelid: number,
+    x?: number,
+    y?: number,
+    z?: number,
+    rotationX?: number,
+    rotationY?: number,
+    rotationZ?: number,
+    drawDistance?: number
   ) {
-    if (x === undefined && y === undefined) {
-      const result = __internal_omp.Object.FromID(modelidOrId);
+    if (arguments.length < 2) {
+      const result = internal_omp.Object.FromID(modelid);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve object");
+        throw new Error("Failed to create object");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = modelidOrId;
+      this.ptr = PTR(result.ret);
+      this.id = modelid;
       return;
     }
 
-    const result = __internal_omp.Object.Create(
-      modelidOrId,
-      x,
-      y,
-      z,
-      rotationX,
-      rotationY,
-      rotationZ,
-      drawDistance
+    const result = internal_omp.Object.Create(
+      modelid,
+      x!,
+      y!,
+      z!,
+      rotationX!,
+      rotationY!,
+      rotationZ!,
+      drawDistance!
     );
     if (result.ret === 0) {
       throw new Error("Failed to create object");
     }
 
-    this.#ptr = omp.PTR(result.ret);
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -76,18 +90,17 @@ class ObjectMp {
    * @param {number} id
    * @throws Will throw an error if the object retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): void {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
-      return true;
+      this.ptr = null;
+      this.id = null;
     } else {
-      return false;
+      throw new Error("Failed to destroy object");
     }
   }
 
@@ -96,8 +109,8 @@ class ObjectMp {
    * @description get object pointer
    * @returns {number|null} object pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -105,8 +118,8 @@ class ObjectMp {
    * @description get object id
    * @returns {number|null} object id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -122,20 +135,20 @@ class ObjectMp {
    * @throws Will throw an error if the object is invalid
    */
   attachToVehicle(
-    vehicle,
-    offsetX,
-    offsetY,
-    offsetZ,
-    rotationX,
-    rotationY,
-    rotationZ
-  ) {
-    if (!this.#ptr) {
+    vehicle: Vehicle,
+    offsetX: number,
+    offsetY: number,
+    offsetZ: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.AttachToVehicle(
-      this.#ptr,
+    const result = internal_omp.Object.AttachToVehicle(
+      this.ptr,
       vehicle.getPtr(),
       offsetX,
       offsetY,
@@ -161,21 +174,21 @@ class ObjectMp {
    * @throws Will throw an error if the object is invalid
    */
   attachToObject(
-    objAttachedTo,
-    offsetX,
-    offsetY,
-    offsetZ,
-    rotationX,
-    rotationY,
-    rotationZ,
-    syncRotation
-  ) {
-    if (!this.#ptr) {
+    objAttachedTo: ObjectMp,
+    offsetX: number,
+    offsetY: number,
+    offsetZ: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number,
+    syncRotation: boolean
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.AttachToObject(
-      this.#ptr,
+    const result = internal_omp.Object.AttachToObject(
+      this.ptr,
       objAttachedTo.getPtr(),
       offsetX,
       offsetY,
@@ -201,20 +214,20 @@ class ObjectMp {
    * @throws Will throw an error if the object is invalid
    */
   attachToPlayer(
-    player,
-    offsetX,
-    offsetY,
-    offsetZ,
-    rotationX,
-    rotationY,
-    rotationZ
-  ) {
-    if (!this.#ptr) {
+    player: Player,
+    offsetX: number,
+    offsetY: number,
+    offsetZ: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.AttachToPlayer(
-      this.#ptr,
+    const result = internal_omp.Object.AttachToPlayer(
+      this.ptr,
       player.getPtr(),
       offsetX,
       offsetY,
@@ -234,12 +247,12 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  setPos(x, y, z) {
-    if (!this.#ptr) {
+  setPos(x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.SetPos(this.#ptr, x, y, z);
+    const result = internal_omp.Object.SetPos(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -248,12 +261,12 @@ class ObjectMp {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the object is invalid
    */
-  getPos() {
-    if (!this.#ptr) {
+  getPos(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetPos(this.#ptr);
+    const result = internal_omp.Object.GetPos(this.ptr);
     return result;
   }
 
@@ -265,13 +278,13 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  setRot(rotationX, rotationY, rotationZ) {
-    if (!this.#ptr) {
+  setRot(rotationX: number, rotationY: number, rotationZ: number): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.SetRot(
-      this.#ptr,
+    const result = internal_omp.Object.SetRot(
+      this.ptr,
       rotationX,
       rotationY,
       rotationZ
@@ -284,12 +297,17 @@ class ObjectMp {
    * @returns {{ret: boolean, rotationX: number,rotationY: number,rotationZ: number}} return object
    * @throws Will throw an error if the object is invalid
    */
-  getRot() {
-    if (!this.#ptr) {
+  getRot(): {
+    ret: boolean;
+    rotationX: number;
+    rotationY: number;
+    rotationZ: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetRot(this.#ptr);
+    const result = internal_omp.Object.GetRot(this.ptr);
     return result;
   }
 
@@ -298,12 +316,12 @@ class ObjectMp {
    * @returns {number}
    * @throws Will throw an error if the object is invalid
    */
-  getModel() {
-    if (!this.#ptr) {
+  getModel(): number {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetModel(this.#ptr);
+    const result = internal_omp.Object.GetModel(this.ptr);
     return result.ret;
   }
 
@@ -312,12 +330,12 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  setNoCameraCollision() {
-    if (!this.#ptr) {
+  setNoCameraCollision(): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.SetNoCameraCollision(this.#ptr);
+    const result = internal_omp.Object.SetNoCameraCollision(this.ptr);
     return result.ret;
   }
 
@@ -326,12 +344,12 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  isValid() {
-    if (!this.#ptr) {
+  isValid(): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.IsValid(this.#ptr);
+    const result = internal_omp.Object.IsValid(this.ptr);
     return result.ret;
   }
 
@@ -347,13 +365,21 @@ class ObjectMp {
    * @returns {number}
    * @throws Will throw an error if the object is invalid
    */
-  move(x, y, z, speed, rotationX, rotationY, rotationZ) {
-    if (!this.#ptr) {
+  move(
+    x: number,
+    y: number,
+    z: number,
+    speed: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number
+  ): number {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.Move(
-      this.#ptr,
+    const result = internal_omp.Object.Move(
+      this.ptr,
       x,
       y,
       z,
@@ -370,12 +396,12 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  stop() {
-    if (!this.#ptr) {
+  stop(): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.Stop(this.#ptr);
+    const result = internal_omp.Object.Stop(this.ptr);
     return result.ret;
   }
 
@@ -384,12 +410,12 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  isMoving() {
-    if (!this.#ptr) {
+  isMoving(): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.IsMoving(this.#ptr);
+    const result = internal_omp.Object.IsMoving(this.ptr);
     return result.ret;
   }
 
@@ -399,15 +425,12 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  beginEditing(player) {
-    if (!this.#ptr) {
+  beginEditing(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.BeginEditing(
-      player.getPtr(),
-      this.#ptr
-    );
+    const result = internal_omp.Object.BeginEditing(player.getPtr(), this.ptr);
     return result.ret;
   }
 
@@ -417,8 +440,8 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  static beginSelecting(player) {
-    const result = __internal_omp.Object.BeginSelecting(player.getPtr());
+  static beginSelecting(player: Player): boolean {
+    const result = internal_omp.Object.BeginSelecting(player.getPtr());
     return result.ret;
   }
 
@@ -428,8 +451,8 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  static endEditing(player) {
-    const result = __internal_omp.Object.EndEditing(player.getPtr());
+  static endEditing(player: Player): boolean {
+    const result = internal_omp.Object.EndEditing(player.getPtr());
     return result.ret;
   }
 
@@ -444,18 +467,18 @@ class ObjectMp {
    * @throws Will throw an error if the object is invalid
    */
   setMaterial(
-    materialIndex,
-    modelId,
-    textureLibrary,
-    textureName,
-    materialColor
-  ) {
-    if (!this.#ptr) {
+    materialIndex: number,
+    modelId: number,
+    textureLibrary: string,
+    textureName: string,
+    materialColor: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.SetMaterial(
-      this.#ptr,
+    const result = internal_omp.Object.SetMaterial(
+      this.ptr,
       materialIndex,
       modelId,
       textureLibrary,
@@ -480,22 +503,22 @@ class ObjectMp {
    * @throws Will throw an error if the object is invalid
    */
   setMaterialText(
-    text,
-    materialIndex,
-    materialSize,
-    fontface,
-    fontsize,
-    bold,
-    fontColor,
-    backgroundColor,
-    textalignment
-  ) {
-    if (!this.#ptr) {
+    text: string,
+    materialIndex: number,
+    materialSize: number,
+    fontface: string,
+    fontsize: number,
+    bold: boolean,
+    fontColor: number,
+    backgroundColor: number,
+    textalignment: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.SetMaterialText(
-      this.#ptr,
+    const result = internal_omp.Object.SetMaterialText(
+      this.ptr,
       text,
       materialIndex,
       materialSize,
@@ -515,13 +538,13 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  setDefaultCameraCollision(disable) {
-    if (!this.#ptr) {
+  setDefaultCameraCollision(disable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.SetDefaultCameraCollision(
-      this.#ptr,
+    const result = internal_omp.Object.SetDefaultCameraCollision(
+      this.ptr,
       disable
     );
     return result.ret;
@@ -532,12 +555,12 @@ class ObjectMp {
    * @returns {number}
    * @throws Will throw an error if the object is invalid
    */
-  getDrawDistance() {
-    if (!this.#ptr) {
+  getDrawDistance(): number {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetDrawDistance(this.#ptr);
+    const result = internal_omp.Object.GetDrawDistance(this.ptr);
     return result.ret;
   }
 
@@ -546,12 +569,12 @@ class ObjectMp {
    * @returns {number}
    * @throws Will throw an error if the object is invalid
    */
-  getMoveSpeed() {
-    if (!this.#ptr) {
+  getMoveSpeed(): number {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetMoveSpeed(this.#ptr);
+    const result = internal_omp.Object.GetMoveSpeed(this.ptr);
     return result.ret;
   }
 
@@ -560,12 +583,17 @@ class ObjectMp {
    * @returns {{ret: boolean, targetX: number,targetY: number,targetZ: number}} return object
    * @throws Will throw an error if the object is invalid
    */
-  getMovingTargetPos() {
-    if (!this.#ptr) {
+  getMovingTargetPos(): {
+    ret: boolean;
+    targetX: number;
+    targetY: number;
+    targetZ: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetMovingTargetPos(this.#ptr);
+    const result = internal_omp.Object.GetMovingTargetPos(this.ptr);
     return result;
   }
 
@@ -574,27 +602,50 @@ class ObjectMp {
    * @returns {{ret: boolean, rotationX: number,rotationY: number,rotationZ: number}} return object
    * @throws Will throw an error if the object is invalid
    */
-  getMovingTargetRot() {
-    if (!this.#ptr) {
+  getMovingTargetRot(): {
+    ret: boolean;
+    rotationX: number;
+    rotationY: number;
+    rotationZ: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetMovingTargetRot(this.#ptr);
+    const result = internal_omp.Object.GetMovingTargetRot(this.ptr);
     return result;
   }
 
   /**
    * @method getAttachedData
-   * @returns {{ret: boolean, parentVehicle: number,parentObject: number,parentPlayer: number}} return object
+   * @returns {{ret: boolean, parentVehicle: Vehicle, parentObject: ObjectMp, parentPlayer: Player}} return object
    * @throws Will throw an error if the object is invalid
    */
-  getAttachedData() {
-    if (!this.#ptr) {
+  getAttachedData(): {
+    ret: boolean;
+    parentVehicle: Vehicle | undefined;
+    parentObject: ObjectMp | undefined;
+    parentPlayer: Player | undefined;
+  } {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetAttachedData(this.#ptr);
-    return result;
+    const result = internal_omp.Object.GetAttachedData(this.ptr);
+
+    const ret: {
+      ret: boolean;
+      parentVehicle: Vehicle | undefined;
+      parentObject: ObjectMp | undefined;
+      parentPlayer: Player | undefined;
+    } = {
+      ret: result.ret,
+      parentObject: omp.objects.get(result.parentObject),
+      parentVehicle: omp.vehicles.get(result.parentVehicle),
+      parentPlayer: omp.players.get(result.parentPlayer),
+    };
+
+    return ret;
   }
 
   /**
@@ -602,12 +653,20 @@ class ObjectMp {
    * @returns {{ret: boolean, offsetX: number,offsetY: number,offsetZ: number,rotationX: number,rotationY: number,rotationZ: number}} return object
    * @throws Will throw an error if the object is invalid
    */
-  getAttachedOffset() {
-    if (!this.#ptr) {
+  getAttachedOffset(): {
+    ret: boolean;
+    offsetX: number;
+    offsetY: number;
+    offsetZ: number;
+    rotationX: number;
+    rotationY: number;
+    rotationZ: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetAttachedOffset(this.#ptr);
+    const result = internal_omp.Object.GetAttachedOffset(this.ptr);
     return result;
   }
 
@@ -616,12 +675,12 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  getSyncRotation() {
-    if (!this.#ptr) {
+  getSyncRotation(): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetSyncRotation(this.#ptr);
+    const result = internal_omp.Object.GetSyncRotation(this.ptr);
     return result.ret;
   }
 
@@ -631,13 +690,13 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  isMaterialSlotUsed(materialIndex) {
-    if (!this.#ptr) {
+  isMaterialSlotUsed(materialIndex: number): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.IsMaterialSlotUsed(
-      this.#ptr,
+    const result = internal_omp.Object.IsMaterialSlotUsed(
+      this.ptr,
       materialIndex
     );
     return result.ret;
@@ -649,12 +708,18 @@ class ObjectMp {
    * @returns {{ret: boolean, modelid: number,textureLibrary: string,textureName: string,materialColor: number}} return object
    * @throws Will throw an error if the object is invalid
    */
-  getMaterial(materialIndex) {
-    if (!this.#ptr) {
+  getMaterial(materialIndex: number): {
+    ret: boolean;
+    modelid: number;
+    textureLibrary: string;
+    textureName: string;
+    materialColor: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetMaterial(this.#ptr, materialIndex);
+    const result = internal_omp.Object.GetMaterial(this.ptr, materialIndex);
     return result;
   }
 
@@ -664,15 +729,22 @@ class ObjectMp {
    * @returns {{ret: boolean, text: string,materialSize: number,fontFace: string,fontSize: number,bold: boolean,fontColor: number,backgroundColor: number,textAlignment: number}} return object
    * @throws Will throw an error if the object is invalid
    */
-  getMaterialText(materialIndex) {
-    if (!this.#ptr) {
+  getMaterialText(materialIndex: number): {
+    ret: boolean;
+    text: string;
+    materialSize: number;
+    fontFace: string;
+    fontSize: number;
+    bold: boolean;
+    fontColor: number;
+    backgroundColor: number;
+    textAlignment: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.GetMaterialText(
-      this.#ptr,
-      materialIndex
-    );
+    const result = internal_omp.Object.GetMaterialText(this.ptr, materialIndex);
     return result;
   }
 
@@ -681,12 +753,12 @@ class ObjectMp {
    * @returns {boolean}
    * @throws Will throw an error if the object is invalid
    */
-  isObjectNoCameraCollision() {
-    if (!this.#ptr) {
+  isObjectNoCameraCollision(): boolean {
+    if (!this.ptr) {
       throw new Error("Object instance is not valid");
     }
 
-    const result = __internal_omp.Object.IsObjectNoCameraCollision(this.#ptr);
+    const result = internal_omp.Object.IsObjectNoCameraCollision(this.ptr);
     return result.ret;
   }
 
@@ -697,10 +769,8 @@ class ObjectMp {
    * @returns {number}
    * @throws Will throw an error if the object is invalid
    */
-  static getType(player, objectid) {
-    const result = __internal_omp.Object.GetType(player.getPtr(), objectid);
+  static getType(player: Player, objectid: number): number {
+    const result = internal_omp.Object.GetType(player.getPtr(), objectid);
     return result.ret;
   }
 }
-
-export default ObjectMp;

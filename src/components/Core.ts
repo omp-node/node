@@ -1,13 +1,15 @@
+import { internal_omp } from "../globals";
+
 /**
  * Core class
  */
-class Core {
+export default class Core {
   /**
    * @method tickCount
    * @returns {number}
    */
-  static tickCount() {
-    const result = __internal_omp.Core.TickCount();
+  static tickCount(): number {
+    const result = internal_omp.Core.TickCount();
     return result.ret;
   }
 
@@ -15,8 +17,8 @@ class Core {
    * @method maxPlayers
    * @returns {number}
    */
-  static maxPlayers() {
-    const result = __internal_omp.Core.MaxPlayers();
+  static maxPlayers(): number {
+    const result = internal_omp.Core.MaxPlayers();
     return result.ret;
   }
 
@@ -25,8 +27,8 @@ class Core {
    * @param {string} text
    * @returns {boolean}
    */
-  static log(text) {
-    const result = __internal_omp.Core.Log(text);
+  static log(text: string): boolean {
+    const result = internal_omp.Core.Log(text);
     return result.ret;
   }
 
@@ -34,8 +36,8 @@ class Core {
    * @method isAdminTeleportAllowed
    * @returns {boolean}
    */
-  static isAdminTeleportAllowed() {
-    const result = __internal_omp.Core.IsAdminTeleportAllowed();
+  static isAdminTeleportAllowed(): boolean {
+    const result = internal_omp.Core.IsAdminTeleportAllowed();
     return result.ret;
   }
 
@@ -44,8 +46,8 @@ class Core {
    * @param {boolean} allow
    * @returns {boolean}
    */
-  static allowAdminTeleport(allow) {
-    const result = __internal_omp.Core.AllowAdminTeleport(allow);
+  static allowAdminTeleport(allow: boolean): boolean {
+    const result = internal_omp.Core.AllowAdminTeleport(allow);
     return result.ret;
   }
 
@@ -53,8 +55,8 @@ class Core {
    * @method areAllAnimationsEnabled
    * @returns {boolean}
    */
-  static areAllAnimationsEnabled() {
-    const result = __internal_omp.Core.AreAllAnimationsEnabled();
+  static areAllAnimationsEnabled(): boolean {
+    const result = internal_omp.Core.AreAllAnimationsEnabled();
     return result.ret;
   }
 
@@ -63,8 +65,8 @@ class Core {
    * @param {boolean} allow
    * @returns {boolean}
    */
-  static enableAllAnimations(allow) {
-    const result = __internal_omp.Core.EnableAllAnimations(allow);
+  static enableAllAnimations(allow: boolean): boolean {
+    const result = internal_omp.Core.EnableAllAnimations(allow);
     return result.ret;
   }
 
@@ -73,8 +75,8 @@ class Core {
    * @param {string} name
    * @returns {boolean}
    */
-  static isAnimationLibraryValid(name) {
-    const result = __internal_omp.Core.IsAnimationLibraryValid(name);
+  static isAnimationLibraryValid(name: string): boolean {
+    const result = internal_omp.Core.IsAnimationLibraryValid(name);
     return result.ret;
   }
 
@@ -82,8 +84,8 @@ class Core {
    * @method areInteriorWeaponsAllowed
    * @returns {boolean}
    */
-  static areInteriorWeaponsAllowed() {
-    const result = __internal_omp.Core.AreInteriorWeaponsAllowed();
+  static areInteriorWeaponsAllowed(): boolean {
+    const result = internal_omp.Core.AreInteriorWeaponsAllowed();
     return result.ret;
   }
 
@@ -92,8 +94,8 @@ class Core {
    * @param {boolean} allow
    * @returns {boolean}
    */
-  static allowInteriorWeapons(allow) {
-    const result = __internal_omp.Core.AllowInteriorWeapons(allow);
+  static allowInteriorWeapons(allow: boolean): boolean {
+    const result = internal_omp.Core.AllowInteriorWeapons(allow);
     return result.ret;
   }
 
@@ -103,8 +105,8 @@ class Core {
    * @param {number} timeMS
    * @returns {boolean}
    */
-  static blockIpAddress(ipAddress, timeMS) {
-    const result = __internal_omp.Core.BlockIpAddress(ipAddress, timeMS);
+  static blockIpAddress(ipAddress: string, timeMS: number): boolean {
+    const result = internal_omp.Core.BlockIpAddress(ipAddress, timeMS);
     return result.ret;
   }
 
@@ -113,8 +115,8 @@ class Core {
    * @param {string} ipAddress
    * @returns {boolean}
    */
-  static unBlockIpAddress(ipAddress) {
-    const result = __internal_omp.Core.UnBlockIpAddress(ipAddress);
+  static unBlockIpAddress(ipAddress: string): boolean {
+    const result = internal_omp.Core.UnBlockIpAddress(ipAddress);
     return result.ret;
   }
 
@@ -122,8 +124,8 @@ class Core {
    * @method disableEntryExitMarkers
    * @returns {boolean}
    */
-  static disableEntryExitMarkers() {
-    const result = __internal_omp.Core.DisableEntryExitMarkers();
+  static disableEntryExitMarkers(): boolean {
+    const result = internal_omp.Core.DisableEntryExitMarkers();
     return result.ret;
   }
 
@@ -131,8 +133,8 @@ class Core {
    * @method disableNameTagsLOS
    * @returns {boolean}
    */
-  static disableNameTagsLOS() {
-    const result = __internal_omp.Core.DisableNameTagsLOS();
+  static disableNameTagsLOS(): boolean {
+    const result = internal_omp.Core.DisableNameTagsLOS();
     return result.ret;
   }
 
@@ -141,8 +143,8 @@ class Core {
    * @param {boolean} enable
    * @returns {boolean}
    */
-  static enableZoneNames(enable) {
-    const result = __internal_omp.Core.EnableZoneNames(enable);
+  static enableZoneNames(enable: boolean): boolean {
+    const result = internal_omp.Core.EnableZoneNames(enable);
     return result.ret;
   }
 
@@ -153,8 +155,8 @@ class Core {
    * @param {number} style
    * @returns {boolean}
    */
-  static showGameTextForAll(msg, time, style) {
-    const result = __internal_omp.Core.ShowGameTextForAll(msg, time, style);
+  static showGameTextForAll(msg: string, time: number, style: number): boolean {
+    const result = internal_omp.Core.ShowGameTextForAll(msg, time, style);
     return result.ret;
   }
 
@@ -163,8 +165,8 @@ class Core {
    * @param {number} style
    * @returns {boolean}
    */
-  static hideGameTextForAll(style) {
-    const result = __internal_omp.Core.HideGameTextForAll(style);
+  static hideGameTextForAll(style: number): boolean {
+    const result = internal_omp.Core.HideGameTextForAll(style);
     return result.ret;
   }
 
@@ -172,8 +174,8 @@ class Core {
    * @method networkStats
    * @returns {{ret: boolean, output: string}} return object
    */
-  static networkStats() {
-    const result = __internal_omp.Core.NetworkStats();
+  static networkStats(): { ret: boolean; output: string } {
+    const result = internal_omp.Core.NetworkStats();
     return result;
   }
 
@@ -181,8 +183,8 @@ class Core {
    * @method serverTickRate
    * @returns {number}
    */
-  static serverTickRate() {
-    const result = __internal_omp.Core.ServerTickRate();
+  static serverTickRate(): number {
+    const result = internal_omp.Core.ServerTickRate();
     return result.ret;
   }
 
@@ -191,8 +193,8 @@ class Core {
    * @param {number} globalChatRadius
    * @returns {boolean}
    */
-  static setChatRadius(globalChatRadius) {
-    const result = __internal_omp.Core.SetChatRadius(globalChatRadius);
+  static setChatRadius(globalChatRadius: number): boolean {
+    const result = internal_omp.Core.SetChatRadius(globalChatRadius);
     return result.ret;
   }
 
@@ -201,8 +203,8 @@ class Core {
    * @param {number} playerMarkerRadius
    * @returns {boolean}
    */
-  static setMarkerRadius(playerMarkerRadius) {
-    const result = __internal_omp.Core.SetMarkerRadius(playerMarkerRadius);
+  static setMarkerRadius(playerMarkerRadius: number): boolean {
+    const result = internal_omp.Core.SetMarkerRadius(playerMarkerRadius);
     return result.ret;
   }
 
@@ -211,8 +213,8 @@ class Core {
    * @param {string} command
    * @returns {boolean}
    */
-  static sendRconCommand(command) {
-    const result = __internal_omp.Core.SendRconCommand(command);
+  static sendRconCommand(command: string): boolean {
+    const result = internal_omp.Core.SendRconCommand(command);
     return result.ret;
   }
 
@@ -221,8 +223,8 @@ class Core {
    * @param {number} amount
    * @returns {boolean}
    */
-  static setDeathDropAmount(amount) {
-    const result = __internal_omp.Core.SetDeathDropAmount(amount);
+  static setDeathDropAmount(amount: number): boolean {
+    const result = internal_omp.Core.SetDeathDropAmount(amount);
     return result.ret;
   }
 
@@ -231,8 +233,8 @@ class Core {
    * @param {string} string
    * @returns {boolean}
    */
-  static gameMode(string) {
-    const result = __internal_omp.Core.GameMode(string);
+  static gameMode(string: string): boolean {
+    const result = internal_omp.Core.GameMode(string);
     return result.ret;
   }
 
@@ -241,8 +243,8 @@ class Core {
    * @param {number} gravity
    * @returns {boolean}
    */
-  static setGravity(gravity) {
-    const result = __internal_omp.Core.SetGravity(gravity);
+  static setGravity(gravity: number): boolean {
+    const result = internal_omp.Core.SetGravity(gravity);
     return result.ret;
   }
 
@@ -250,8 +252,8 @@ class Core {
    * @method getGravity
    * @returns {number}
    */
-  static getGravity() {
-    const result = __internal_omp.Core.GetGravity();
+  static getGravity(): number {
+    const result = internal_omp.Core.GetGravity();
     return result.ret;
   }
 
@@ -260,8 +262,8 @@ class Core {
    * @param {number} distance
    * @returns {boolean}
    */
-  static setNameTagsDrawDistance(distance) {
-    const result = __internal_omp.Core.SetNameTagsDrawDistance(distance);
+  static setNameTagsDrawDistance(distance: number): boolean {
+    const result = internal_omp.Core.SetNameTagsDrawDistance(distance);
     return result.ret;
   }
 
@@ -270,8 +272,8 @@ class Core {
    * @param {number} weatherid
    * @returns {boolean}
    */
-  static setWeather(weatherid) {
-    const result = __internal_omp.Core.SetWeather(weatherid);
+  static setWeather(weatherid: number): boolean {
+    const result = internal_omp.Core.SetWeather(weatherid);
     return result.ret;
   }
 
@@ -280,8 +282,8 @@ class Core {
    * @param {number} hour
    * @returns {boolean}
    */
-  static setWorldTime(hour) {
-    const result = __internal_omp.Core.SetWorldTime(hour);
+  static setWorldTime(hour: number): boolean {
+    const result = internal_omp.Core.SetWorldTime(hour);
     return result.ret;
   }
 
@@ -290,8 +292,8 @@ class Core {
    * @param {boolean} show
    * @returns {boolean}
    */
-  static showNameTags(show) {
-    const result = __internal_omp.Core.ShowNameTags(show);
+  static showNameTags(show: boolean): boolean {
+    const result = internal_omp.Core.ShowNameTags(show);
     return result.ret;
   }
 
@@ -300,8 +302,8 @@ class Core {
    * @param {number} mode
    * @returns {boolean}
    */
-  static showPlayerMarkers(mode) {
-    const result = __internal_omp.Core.ShowPlayerMarkers(mode);
+  static showPlayerMarkers(mode: number): boolean {
+    const result = internal_omp.Core.ShowPlayerMarkers(mode);
     return result.ret;
   }
 
@@ -309,8 +311,8 @@ class Core {
    * @method usePedAnims
    * @returns {boolean}
    */
-  static usePedAnims() {
-    const result = __internal_omp.Core.UsePedAnims();
+  static usePedAnims(): boolean {
+    const result = internal_omp.Core.UsePedAnims();
     return result.ret;
   }
 
@@ -318,8 +320,8 @@ class Core {
    * @method getWeather
    * @returns {number}
    */
-  static getWeather() {
-    const result = __internal_omp.Core.GetWeather();
+  static getWeather(): number {
+    const result = internal_omp.Core.GetWeather();
     return result.ret;
   }
 
@@ -327,8 +329,8 @@ class Core {
    * @method getWorldTime
    * @returns {number}
    */
-  static getWorldTime() {
-    const result = __internal_omp.Core.GetWorldTime();
+  static getWorldTime(): number {
+    const result = internal_omp.Core.GetWorldTime();
     return result.ret;
   }
 
@@ -337,8 +339,8 @@ class Core {
    * @param {boolean} enable
    * @returns {boolean}
    */
-  static toggleChatTextReplacement(enable) {
-    const result = __internal_omp.Core.ToggleChatTextReplacement(enable);
+  static toggleChatTextReplacement(enable: boolean): boolean {
+    const result = internal_omp.Core.ToggleChatTextReplacement(enable);
     return result.ret;
   }
 
@@ -346,8 +348,8 @@ class Core {
    * @method isChatTextReplacementToggled
    * @returns {boolean}
    */
-  static isChatTextReplacementToggled() {
-    const result = __internal_omp.Core.IsChatTextReplacementToggled();
+  static isChatTextReplacementToggled(): boolean {
+    const result = internal_omp.Core.IsChatTextReplacementToggled();
     return result.ret;
   }
 
@@ -356,8 +358,8 @@ class Core {
    * @param {string} name
    * @returns {boolean}
    */
-  static isNickNameValid(name) {
-    const result = __internal_omp.Core.IsNickNameValid(name);
+  static isNickNameValid(name: string): boolean {
+    const result = internal_omp.Core.IsNickNameValid(name);
     return result.ret;
   }
 
@@ -367,8 +369,8 @@ class Core {
    * @param {boolean} allow
    * @returns {boolean}
    */
-  static allowNickNameCharacter(character, allow) {
-    const result = __internal_omp.Core.AllowNickNameCharacter(character, allow);
+  static allowNickNameCharacter(character: number, allow: boolean): boolean {
+    const result = internal_omp.Core.AllowNickNameCharacter(character, allow);
     return result.ret;
   }
 
@@ -377,8 +379,8 @@ class Core {
    * @param {number} character
    * @returns {boolean}
    */
-  static isNickNameCharacterAllowed(character) {
-    const result = __internal_omp.Core.IsNickNameCharacterAllowed(character);
+  static isNickNameCharacterAllowed(character: number): boolean {
+    const result = internal_omp.Core.IsNickNameCharacterAllowed(character);
     return result.ret;
   }
 
@@ -386,8 +388,8 @@ class Core {
    * @method clearBanList
    * @returns {boolean}
    */
-  static clearBanList() {
-    const result = __internal_omp.Core.ClearBanList();
+  static clearBanList(): boolean {
+    const result = internal_omp.Core.ClearBanList();
     return result.ret;
   }
 
@@ -396,8 +398,8 @@ class Core {
    * @param {string} ip
    * @returns {boolean}
    */
-  static isIpAddressBanned(ip) {
-    const result = __internal_omp.Core.IsIpAddressBanned(ip);
+  static isIpAddressBanned(ip: string): boolean {
+    const result = internal_omp.Core.IsIpAddressBanned(ip);
     return result.ret;
   }
 
@@ -406,8 +408,8 @@ class Core {
    * @param {number} weapon
    * @returns {number}
    */
-  static getWeaponSlot(weapon) {
-    const result = __internal_omp.Core.GetWeaponSlot(weapon);
+  static getWeaponSlot(weapon: number): number {
+    const result = internal_omp.Core.GetWeaponSlot(weapon);
     return result.ret;
   }
 
@@ -417,8 +419,8 @@ class Core {
    * @param {string} value
    * @returns {boolean}
    */
-  static addRule(name, value) {
-    const result = __internal_omp.Core.AddRule(name, value);
+  static addRule(name: string, value: string): boolean {
+    const result = internal_omp.Core.AddRule(name, value);
     return result.ret;
   }
 
@@ -427,8 +429,8 @@ class Core {
    * @param {string} name
    * @returns {boolean}
    */
-  static isValidRule(name) {
-    const result = __internal_omp.Core.IsValidRule(name);
+  static isValidRule(name: string): boolean {
+    const result = internal_omp.Core.IsValidRule(name);
     return result.ret;
   }
 
@@ -437,10 +439,8 @@ class Core {
    * @param {string} name
    * @returns {boolean}
    */
-  static removeRule(name) {
-    const result = __internal_omp.Core.RemoveRule(name);
+  static removeRule(name: string): boolean {
+    const result = internal_omp.Core.RemoveRule(name);
     return result.ret;
   }
 }
-
-export default Core;

@@ -1,14 +1,17 @@
+import { ObjectMp, Player, Vehicle, omp } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * PlayerObject class
  */
-class PlayerObject {
+export default class PlayerObject {
   /**
    * @var ptr
    * @description PlayerObject pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,7 +19,7 @@ class PlayerObject {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @var player
@@ -24,12 +27,12 @@ class PlayerObject {
    * @type {Player|null}
    * @private
    */
-  #player = null;
+  private player: Player | null = null;
 
   /**
    * @constructor
    * @param {Player} player
-   * @param {number} modelidOrId
+   * @param {number} modelid
    * @param {number} x
    * @param {number} y
    * @param {number} z
@@ -40,34 +43,43 @@ class PlayerObject {
    * @throws Will throw an error if the playerObject creation fails
    */
   constructor(
-    player,
-    modelidOrId,
-    x,
-    y,
-    z,
-    rotationX,
-    rotationY,
-    rotationZ,
-    drawDistance
+    player: Player,
+    modelid: number,
+    x: number,
+    y: number,
+    z: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number,
+    drawDistance: number
+  );
+
+  constructor(
+    player: Player,
+    modelid: number,
+    x?: number,
+    y?: number,
+    z?: number,
+    rotationX?: number,
+    rotationY?: number,
+    rotationZ?: number,
+    drawDistance?: number
   ) {
-    if (x === undefined && y === undefined) {
-      const result = __internal_omp.PlayerObject.FromID(
-        player.getPtr(),
-        modelidOrId
-      );
+    if (arguments.length < 3) {
+      const result = internal_omp.PlayerObject.FromID(player.getPtr(), modelid);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve playerTextLabel");
+        throw new Error("Failed to create PlayerObject");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = modelidOrId;
-      this.#player = player;
+      this.ptr = PTR(result.ret);
+      this.id = modelid;
+      this.player = player;
       return;
     }
 
-    const result = __internal_omp.PlayerObject.Create(
+    const result = internal_omp.PlayerObject.Create(
       player,
-      modelidOrId,
+      modelid,
       x,
       y,
       z,
@@ -80,10 +92,10 @@ class PlayerObject {
       throw new Error("Failed to create playerObject");
     }
 
-    this.#player = player;
-    this.#ptr = omp.PTR(result.ret);
+    this.player = player;
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -92,18 +104,15 @@ class PlayerObject {
    * @param {number} id
    * @throws Will throw an error if the playerObject retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): void {
+    if (!this.ptr) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
-      return true;
-    } else {
-      return false;
+      this.ptr = null;
+      this.id = null;
     }
   }
 
@@ -112,8 +121,8 @@ class PlayerObject {
    * @description get entity's player
    * @returns {Player|null} playerObject of current entity
    */
-  getPlayer() {
-    return this.#player;
+  getPlayer(): Player | null {
+    return this.player;
   }
 
   /**
@@ -121,8 +130,8 @@ class PlayerObject {
    * @description get playerObject pointer
    * @returns {number|null} playerObject pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -130,8 +139,8 @@ class PlayerObject {
    * @description get playerObject id
    * @returns {number|null} playerObject id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -147,21 +156,21 @@ class PlayerObject {
    * @throws Will throw an error if the playerObject is invalid
    */
   attachToVehicle(
-    vehicle,
-    offsetX,
-    offsetY,
-    offsetZ,
-    rotationX,
-    rotationY,
-    rotationZ
-  ) {
-    if (!this.#ptr || !this.#player) {
+    vehicle: Vehicle,
+    offsetX: number,
+    offsetY: number,
+    offsetZ: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number
+  ): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.AttachToVehicle(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.AttachToVehicle(
+      this.player.getPtr(),
+      this.ptr,
       vehicle.getPtr(),
       offsetX,
       offsetY,
@@ -186,21 +195,21 @@ class PlayerObject {
    * @throws Will throw an error if the playerObject is invalid
    */
   attachToPlayer(
-    playerAttachedTo,
-    offsetX,
-    offsetY,
-    offsetZ,
-    rotationX,
-    rotationY,
-    rotationZ
-  ) {
-    if (!this.#ptr || !this.#player) {
+    playerAttachedTo: Player,
+    offsetX: number,
+    offsetY: number,
+    offsetZ: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number
+  ): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.AttachToPlayer(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.AttachToPlayer(
+      this.player.getPtr(),
+      this.ptr,
       playerAttachedTo.getPtr(),
       offsetX,
       offsetY,
@@ -225,21 +234,21 @@ class PlayerObject {
    * @throws Will throw an error if the playerObject is invalid
    */
   attachToObject(
-    attachedTo,
-    offsetX,
-    offsetY,
-    offsetZ,
-    rotationX,
-    rotationY,
-    rotationZ
-  ) {
-    if (!this.#ptr || !this.#player) {
+    attachedTo: PlayerObject,
+    offsetX: number,
+    offsetY: number,
+    offsetZ: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number
+  ): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.AttachToObject(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.AttachToObject(
+      this.player.getPtr(),
+      this.ptr,
       attachedTo.getPtr(),
       offsetX,
       offsetY,
@@ -259,14 +268,14 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  setPos(x, y, z) {
-    if (!this.#ptr || !this.#player) {
+  setPos(x: number, y: number, z: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.SetPos(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.SetPos(
+      this.player.getPtr(),
+      this.ptr,
       x,
       y,
       z
@@ -279,14 +288,14 @@ class PlayerObject {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the playerObject is invalid
    */
-  getPos() {
-    if (!this.#ptr || !this.#player) {
+  getPos(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetPos(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetPos(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -299,14 +308,14 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  setRot(rotationX, rotationY, rotationZ) {
-    if (!this.#ptr || !this.#player) {
+  setRot(rotationX: number, rotationY: number, rotationZ: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.SetRot(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.SetRot(
+      this.player.getPtr(),
+      this.ptr,
       rotationX,
       rotationY,
       rotationZ
@@ -319,14 +328,19 @@ class PlayerObject {
    * @returns {{ret: boolean, rotationX: number,rotationY: number,rotationZ: number}} return object
    * @throws Will throw an error if the playerObject is invalid
    */
-  getRot() {
-    if (!this.#ptr || !this.#player) {
+  getRot(): {
+    ret: boolean;
+    rotationX: number;
+    rotationY: number;
+    rotationZ: number;
+  } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetRot(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetRot(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -336,14 +350,14 @@ class PlayerObject {
    * @returns {number}
    * @throws Will throw an error if the playerObject is invalid
    */
-  getModel() {
-    if (!this.#ptr || !this.#player) {
+  getModel(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetModel(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetModel(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -353,14 +367,14 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  setNoCameraCollision() {
-    if (!this.#ptr || !this.#player) {
+  setNoCameraCollision(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.SetNoCameraCollision(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.SetNoCameraCollision(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -370,14 +384,14 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  isValid() {
-    if (!this.#ptr || !this.#player) {
+  isValid(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.IsValid(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.IsValid(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -394,14 +408,22 @@ class PlayerObject {
    * @returns {number}
    * @throws Will throw an error if the playerObject is invalid
    */
-  move(x, y, z, speed, rotationX, rotationY, rotationZ) {
-    if (!this.#ptr || !this.#player) {
+  move(
+    x: number,
+    y: number,
+    z: number,
+    speed: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number
+  ): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.Move(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.Move(
+      this.player.getPtr(),
+      this.ptr,
       x,
       y,
       z,
@@ -418,14 +440,14 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  stop() {
-    if (!this.#ptr || !this.#player) {
+  stop(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.Stop(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.Stop(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -435,14 +457,14 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  isMoving() {
-    if (!this.#ptr || !this.#player) {
+  isMoving(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.IsMoving(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.IsMoving(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -452,14 +474,14 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  beginEditing() {
-    if (!this.#ptr || !this.#player) {
+  beginEditing(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.BeginEditing(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.BeginEditing(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -475,19 +497,19 @@ class PlayerObject {
    * @throws Will throw an error if the playerObject is invalid
    */
   setMaterial(
-    materialIndex,
-    modelId,
-    textureLibrary,
-    textureName,
-    materialColor
-  ) {
-    if (!this.#ptr || !this.#player) {
+    materialIndex: number,
+    modelId: number,
+    textureLibrary: string,
+    textureName: string,
+    materialColor: number
+  ): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.SetMaterial(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.SetMaterial(
+      this.player.getPtr(),
+      this.ptr,
       materialIndex,
       modelId,
       textureLibrary,
@@ -512,23 +534,23 @@ class PlayerObject {
    * @throws Will throw an error if the playerObject is invalid
    */
   setMaterialText(
-    text,
-    materialIndex,
-    materialSize,
-    fontface,
-    fontsize,
-    bold,
-    fontColor,
-    backgroundColor,
-    textalignment
-  ) {
-    if (!this.#ptr || !this.#player) {
+    text: string,
+    materialIndex: number,
+    materialSize: number,
+    fontface: string,
+    fontsize: number,
+    bold: boolean,
+    fontColor: number,
+    backgroundColor: number,
+    textalignment: number
+  ): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.SetMaterialText(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.SetMaterialText(
+      this.player.getPtr(),
+      this.ptr,
       text,
       materialIndex,
       materialSize,
@@ -547,14 +569,14 @@ class PlayerObject {
    * @returns {number}
    * @throws Will throw an error if the playerObject is invalid
    */
-  getDrawDistance() {
-    if (!this.#ptr || !this.#player) {
+  getDrawDistance(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetDrawDistance(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetDrawDistance(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -564,14 +586,14 @@ class PlayerObject {
    * @returns {number}
    * @throws Will throw an error if the playerObject is invalid
    */
-  getMoveSpeed() {
-    if (!this.#ptr || !this.#player) {
+  getMoveSpeed(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetMoveSpeed(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetMoveSpeed(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -581,14 +603,19 @@ class PlayerObject {
    * @returns {{ret: boolean, targetX: number,targetY: number,targetZ: number}} return object
    * @throws Will throw an error if the playerObject is invalid
    */
-  getMovingTargetPos() {
-    if (!this.#ptr || !this.#player) {
+  getMovingTargetPos(): {
+    ret: boolean;
+    targetX: number;
+    targetY: number;
+    targetZ: number;
+  } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetMovingTargetPos(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetMovingTargetPos(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -598,14 +625,19 @@ class PlayerObject {
    * @returns {{ret: boolean, rotationX: number,rotationY: number,rotationZ: number}} return object
    * @throws Will throw an error if the playerObject is invalid
    */
-  getMovingTargetRot() {
-    if (!this.#ptr || !this.#player) {
+  getMovingTargetRot(): {
+    ret: boolean;
+    rotationX: number;
+    rotationY: number;
+    rotationZ: number;
+  } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetMovingTargetRot(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetMovingTargetRot(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -615,16 +647,34 @@ class PlayerObject {
    * @returns {{ret: boolean, parentVehicle: number,parentObject: number,parentPlayer: number}} return object
    * @throws Will throw an error if the playerObject is invalid
    */
-  getAttachedData() {
-    if (!this.#ptr || !this.#player) {
+  getAttachedData(): {
+    ret: boolean;
+    parentVehicle: Vehicle | undefined;
+    parentObject: ObjectMp | undefined;
+    parentPlayer: Player | undefined;
+  } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetAttachedData(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetAttachedData(
+      this.player.getPtr(),
+      this.ptr
     );
-    return result;
+
+    const ret: {
+      ret: boolean;
+      parentVehicle: Vehicle | undefined;
+      parentObject: ObjectMp | undefined;
+      parentPlayer: Player | undefined;
+    } = {
+      ret: result.ret,
+      parentObject: omp.objects.get(result.parentObject),
+      parentVehicle: omp.vehicles.get(result.parentVehicle),
+      parentPlayer: omp.players.get(result.parentPlayer),
+    };
+
+    return ret;
   }
 
   /**
@@ -632,14 +682,22 @@ class PlayerObject {
    * @returns {{ret: boolean, offsetX: number,offsetY: number,offsetZ: number,rotationX: number,rotationY: number,rotationZ: number}} return object
    * @throws Will throw an error if the playerObject is invalid
    */
-  getAttachedOffset() {
-    if (!this.#ptr || !this.#player) {
+  getAttachedOffset(): {
+    ret: boolean;
+    offsetX: number;
+    offsetY: number;
+    offsetZ: number;
+    rotationX: number;
+    rotationY: number;
+    rotationZ: number;
+  } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetAttachedOffset(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetAttachedOffset(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -649,14 +707,14 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  getSyncRotation() {
-    if (!this.#ptr || !this.#player) {
+  getSyncRotation(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetSyncRotation(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.GetSyncRotation(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -667,14 +725,14 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  isMaterialSlotUsed(materialIndex) {
-    if (!this.#ptr || !this.#player) {
+  isMaterialSlotUsed(materialIndex: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.IsMaterialSlotUsed(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.IsMaterialSlotUsed(
+      this.player.getPtr(),
+      this.ptr,
       materialIndex
     );
     return result.ret;
@@ -686,14 +744,20 @@ class PlayerObject {
    * @returns {{ret: boolean, modelid: number,textureLibrary: string,textureName: string,materialColor: number}} return object
    * @throws Will throw an error if the playerObject is invalid
    */
-  getMaterial(materialIndex) {
-    if (!this.#ptr || !this.#player) {
+  getMaterial(materialIndex: number): {
+    ret: boolean;
+    modelid: number;
+    textureLibrary: string;
+    textureName: string;
+    materialColor: number;
+  } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetMaterial(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.GetMaterial(
+      this.player.getPtr(),
+      this.ptr,
       materialIndex
     );
     return result;
@@ -705,14 +769,24 @@ class PlayerObject {
    * @returns {{ret: boolean, text: string,materialSize: number,fontFace: string,fontSize: number,bold: boolean,fontColor: number,backgroundColor: number,textAlignment: number}} return object
    * @throws Will throw an error if the playerObject is invalid
    */
-  getMaterialText(materialIndex) {
-    if (!this.#ptr || !this.#player) {
+  getMaterialText(materialIndex: number): {
+    ret: boolean;
+    text: string;
+    materialSize: number;
+    fontFace: string;
+    fontSize: number;
+    bold: boolean;
+    fontColor: number;
+    backgroundColor: number;
+    textAlignment: number;
+  } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.GetMaterialText(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerObject.GetMaterialText(
+      this.player.getPtr(),
+      this.ptr,
       materialIndex
     );
     return result;
@@ -723,17 +797,15 @@ class PlayerObject {
    * @returns {boolean}
    * @throws Will throw an error if the playerObject is invalid
    */
-  isNoCameraCollision() {
-    if (!this.#ptr || !this.#player) {
+  isNoCameraCollision(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerObject instance is not valid");
     }
 
-    const result = __internal_omp.PlayerObject.IsNoCameraCollision(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerObject.IsNoCameraCollision(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
 }
-
-export default PlayerObject;

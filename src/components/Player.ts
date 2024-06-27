@@ -1,14 +1,17 @@
+import { Actor, Menu, ObjectMp, PlayerObject, Vehicle, omp } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * Player class
  */
-class Player {
+export default class Player {
   /**
    * @var ptr
    * @description Player pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,21 +19,21 @@ class Player {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @constructor
    * @param {number} id
    * @throws Will throw an error if the player retrieval fails
    */
-  constructor(id) {
-    const result = __internal_omp.Player.FromID(id);
+  constructor(id: number) {
+    const result = internal_omp.Player.FromID(id);
     if (result.ret === 0) {
       throw new Error("Failed to retireve player");
     }
 
-    this.#ptr = omp.PTR(result.ret);
-    this.#id = id;
+    this.ptr = PTR(result.ret);
+    this.id = id;
   }
 
   /**
@@ -38,8 +41,8 @@ class Player {
    * @description get player pointer
    * @returns {number|null} player pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -47,8 +50,8 @@ class Player {
    * @description get player id
    * @returns {number|null} player id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -69,25 +72,25 @@ class Player {
    * @throws Will throw an error if the player is invalid
    */
   setSpawnInfo(
-    team,
-    skin,
-    x,
-    y,
-    z,
-    angle,
-    weapon1,
-    ammo1,
-    weapon2,
-    ammo2,
-    weapon3,
-    ammo3
-  ) {
-    if (!this.#ptr) {
+    team: number,
+    skin: number,
+    x: number,
+    y: number,
+    z: number,
+    angle: number,
+    weapon1: number,
+    ammo1: number,
+    weapon2: number,
+    ammo2: number,
+    weapon3: number,
+    ammo3: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetSpawnInfo(
-      this.#ptr,
+    const result = internal_omp.Player.SetSpawnInfo(
+      this.ptr,
       team,
       skin,
       x,
@@ -109,12 +112,26 @@ class Player {
    * @returns {{ret: boolean, team: number,skin: number,x: number,y: number,z: number,angle: number,weapon1: number,ammo1: number,weapon2: number,ammo2: number,weapon3: number,ammo3: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getSpawnInfo() {
-    if (!this.#ptr) {
+  getSpawnInfo(): {
+    ret: boolean;
+    team: number;
+    skin: number;
+    x: number;
+    y: number;
+    z: number;
+    angle: number;
+    weapon1: number;
+    ammo1: number;
+    weapon2: number;
+    ammo2: number;
+    weapon3: number;
+    ammo3: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSpawnInfo(this.#ptr);
+    const result = internal_omp.Player.GetSpawnInfo(this.ptr);
     return result;
   }
 
@@ -123,12 +140,15 @@ class Player {
    * @returns {{ret: boolean, output: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getNetworkStats() {
-    if (!this.#ptr) {
+  getNetworkStats(): {
+    ret: boolean;
+    output: string;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetNetworkStats(this.#ptr);
+    const result = internal_omp.Player.GetNetworkStats(this.ptr);
     return result;
   }
 
@@ -137,12 +157,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  netStatsBytesReceived() {
-    if (!this.#ptr) {
+  netStatsBytesReceived(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.NetStatsBytesReceived(this.#ptr);
+    const result = internal_omp.Player.NetStatsBytesReceived(this.ptr);
     return result.ret;
   }
 
@@ -151,12 +171,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  netStatsBytesSent() {
-    if (!this.#ptr) {
+  netStatsBytesSent(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.NetStatsBytesSent(this.#ptr);
+    const result = internal_omp.Player.NetStatsBytesSent(this.ptr);
     return result.ret;
   }
 
@@ -165,12 +185,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  netStatsConnectionStatus() {
-    if (!this.#ptr) {
+  netStatsConnectionStatus(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.NetStatsConnectionStatus(this.#ptr);
+    const result = internal_omp.Player.NetStatsConnectionStatus(this.ptr);
     return result.ret;
   }
 
@@ -179,12 +199,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  netStatsGetConnectedTime() {
-    if (!this.#ptr) {
+  netStatsGetConnectedTime(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.NetStatsGetConnectedTime(this.#ptr);
+    const result = internal_omp.Player.NetStatsGetConnectedTime(this.ptr);
     return result.ret;
   }
 
@@ -193,12 +213,15 @@ class Player {
    * @returns {{ret: boolean, output: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  netStatsGetIpPort() {
-    if (!this.#ptr) {
+  netStatsGetIpPort(): {
+    ret: boolean;
+    output: string;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.NetStatsGetIpPort(this.#ptr);
+    const result = internal_omp.Player.NetStatsGetIpPort(this.ptr);
     return result;
   }
 
@@ -207,12 +230,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  netStatsMessagesReceived() {
-    if (!this.#ptr) {
+  netStatsMessagesReceived(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.NetStatsMessagesReceived(this.#ptr);
+    const result = internal_omp.Player.NetStatsMessagesReceived(this.ptr);
     return result.ret;
   }
 
@@ -221,14 +244,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  netStatsMessagesRecvPerSecond() {
-    if (!this.#ptr) {
+  netStatsMessagesRecvPerSecond(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.NetStatsMessagesRecvPerSecond(
-      this.#ptr
-    );
+    const result = internal_omp.Player.NetStatsMessagesRecvPerSecond(this.ptr);
     return result.ret;
   }
 
@@ -237,12 +258,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  netStatsMessagesSent() {
-    if (!this.#ptr) {
+  netStatsMessagesSent(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.NetStatsMessagesSent(this.#ptr);
+    const result = internal_omp.Player.NetStatsMessagesSent(this.ptr);
     return result.ret;
   }
 
@@ -251,12 +272,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  netStatsPacketLossPercent() {
-    if (!this.#ptr) {
+  netStatsPacketLossPercent(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.NetStatsPacketLossPercent(this.#ptr);
+    const result = internal_omp.Player.NetStatsPacketLossPercent(this.ptr);
     return result.ret;
   }
 
@@ -265,12 +286,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getCustomSkin() {
-    if (!this.#ptr) {
+  getCustomSkin(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCustomSkin(this.#ptr);
+    const result = internal_omp.Player.GetCustomSkin(this.ptr);
     return result.ret;
   }
 
@@ -279,12 +300,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getDialog() {
-    if (!this.#ptr) {
+  getDialog(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetDialog(this.#ptr);
+    const result = internal_omp.Player.GetDialog(this.ptr);
     return result.ret;
   }
 
@@ -293,27 +314,36 @@ class Player {
    * @returns {{ret: boolean, dialogid: number,style: number,title: string,body: string,button1: string,button2: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getDialogData() {
-    if (!this.#ptr) {
+  getDialogData(): {
+    ret: boolean;
+    dialogid: number;
+    style: number;
+    title: string;
+    body: string;
+    button1: string;
+    button2: string;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetDialogData(this.#ptr);
+    const result = internal_omp.Player.GetDialogData(this.ptr);
     return result;
   }
 
   /**
    * @method getMenu
-   * @returns {Menu}
+   * @returns {Menu|undefined}
    * @throws Will throw an error if the player is invalid
    */
-  getMenu() {
-    if (!this.#ptr) {
+  getMenu(): Menu | undefined {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetMenu(this.#ptr);
-    return result.ret;
+    const result = internal_omp.Player.GetMenu(this.ptr);
+    const menu = omp.menus.at(result.ret);
+    return menu;
   }
 
   /**
@@ -321,12 +351,12 @@ class Player {
    * @returns {PlayerObject}
    * @throws Will throw an error if the player is invalid
    */
-  getSurfingPlayerObject() {
-    if (!this.#ptr) {
+  getSurfingPlayerObject(): PlayerObject {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSurfingPlayerObject(this.#ptr);
+    const result = internal_omp.Player.GetSurfingPlayerObject(this.ptr);
     return result.ret;
   }
 
@@ -335,12 +365,12 @@ class Player {
    * @returns {PlayerObject}
    * @throws Will throw an error if the player is invalid
    */
-  getCameraTargetPlayerObject() {
-    if (!this.#ptr) {
+  getCameraTargetPlayerObject(): PlayerObject {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraTargetPlayerObject(this.#ptr);
+    const result = internal_omp.Player.GetCameraTargetPlayerObject(this.ptr);
     return result.ret;
   }
 
@@ -351,16 +381,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  sendClientMessage(color, text) {
-    if (!this.#ptr) {
+  sendClientMessage(color: number, text: string): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SendClientMessage(
-      this.#ptr,
-      color,
-      text
-    );
+    const result = internal_omp.Player.SendClientMessage(this.ptr, color, text);
     return result.ret;
   }
 
@@ -372,12 +398,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setCameraPos(x, y, z) {
-    if (!this.#ptr) {
+  setCameraPos(x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetCameraPos(this.#ptr, x, y, z);
+    const result = internal_omp.Player.SetCameraPos(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -387,12 +413,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setDrunkLevel(level) {
-    if (!this.#ptr) {
+  setDrunkLevel(level: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetDrunkLevel(this.#ptr, level);
+    const result = internal_omp.Player.SetDrunkLevel(this.ptr, level);
     return result.ret;
   }
 
@@ -402,12 +428,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setInterior(interior) {
-    if (!this.#ptr) {
+  setInterior(interior: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetInterior(this.#ptr, interior);
+    const result = internal_omp.Player.SetInterior(this.ptr, interior);
     return result.ret;
   }
 
@@ -417,12 +443,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setWantedLevel(level) {
-    if (!this.#ptr) {
+  setWantedLevel(level: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetWantedLevel(this.#ptr, level);
+    const result = internal_omp.Player.SetWantedLevel(this.ptr, level);
     return result.ret;
   }
 
@@ -432,12 +458,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setWeather(weather) {
-    if (!this.#ptr) {
+  setWeather(weather: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetWeather(this.#ptr, weather);
+    const result = internal_omp.Player.SetWeather(this.ptr, weather);
     return result.ret;
   }
 
@@ -446,12 +472,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getWeather() {
-    if (!this.#ptr) {
+  getWeather(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetWeather(this.#ptr);
+    const result = internal_omp.Player.GetWeather(this.ptr);
     return result.ret;
   }
 
@@ -461,12 +487,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setSkin(skin) {
-    if (!this.#ptr) {
+  setSkin(skin: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetSkin(this.#ptr, skin);
+    const result = internal_omp.Player.SetSkin(this.ptr, skin);
     return result.ret;
   }
 
@@ -476,12 +502,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setShopName(name) {
-    if (!this.#ptr) {
+  setShopName(name: string): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetShopName(this.#ptr, name);
+    const result = internal_omp.Player.SetShopName(this.ptr, name);
     return result.ret;
   }
 
@@ -491,12 +517,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  giveMoney(amount) {
-    if (!this.#ptr) {
+  giveMoney(amount: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GiveMoney(this.#ptr, amount);
+    const result = internal_omp.Player.GiveMoney(this.ptr, amount);
     return result.ret;
   }
 
@@ -509,13 +535,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setCameraLookAt(x, y, z, cutType) {
-    if (!this.#ptr) {
+  setCameraLookAt(x: number, y: number, z: number, cutType: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetCameraLookAt(
-      this.#ptr,
+    const result = internal_omp.Player.SetCameraLookAt(
+      this.ptr,
       x,
       y,
       z,
@@ -529,12 +555,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setCameraBehind() {
-    if (!this.#ptr) {
+  setCameraBehind(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetCameraBehind(this.#ptr);
+    const result = internal_omp.Player.SetCameraBehind(this.ptr);
     return result.ret;
   }
 
@@ -548,13 +574,19 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  createExplosion(x, y, z, type, radius) {
-    if (!this.#ptr) {
+  createExplosion(
+    x: number,
+    y: number,
+    z: number,
+    type: number,
+    radius: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.CreateExplosion(
-      this.#ptr,
+    const result = internal_omp.Player.CreateExplosion(
+      this.ptr,
       x,
       y,
       z,
@@ -575,13 +607,20 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  playAudioStream(url, x, y, z, distance, usePos) {
-    if (!this.#ptr) {
+  playAudioStream(
+    url: string,
+    x: number,
+    y: number,
+    z: number,
+    distance: number,
+    usePos: boolean
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.PlayAudioStream(
-      this.#ptr,
+    const result = internal_omp.Player.PlayAudioStream(
+      this.ptr,
       url,
       x,
       y,
@@ -597,12 +636,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  stopAudioStream() {
-    if (!this.#ptr) {
+  stopAudioStream(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.StopAudioStream(this.#ptr);
+    const result = internal_omp.Player.StopAudioStream(this.ptr);
     return result.ret;
   }
 
@@ -612,12 +651,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  toggleWidescreen(enable) {
-    if (!this.#ptr) {
+  toggleWidescreen(enable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ToggleWidescreen(this.#ptr, enable);
+    const result = internal_omp.Player.ToggleWidescreen(this.ptr, enable);
     return result.ret;
   }
 
@@ -626,12 +665,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isWidescreenToggled() {
-    if (!this.#ptr) {
+  isWidescreenToggled(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsWidescreenToggled(this.#ptr);
+    const result = internal_omp.Player.IsWidescreenToggled(this.ptr);
     return result.ret;
   }
 
@@ -641,12 +680,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setHealth(health) {
-    if (!this.#ptr) {
+  setHealth(health: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetHealth(this.#ptr, health);
+    const result = internal_omp.Player.SetHealth(this.ptr, health);
     return result.ret;
   }
 
@@ -655,12 +694,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getHealth() {
-    if (!this.#ptr) {
+  getHealth(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetHealth(this.#ptr);
+    const result = internal_omp.Player.GetHealth(this.ptr);
     return result.ret;
   }
 
@@ -670,12 +709,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setArmor(armor) {
-    if (!this.#ptr) {
+  setArmor(armor: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetArmor(this.#ptr, armor);
+    const result = internal_omp.Player.SetArmor(this.ptr, armor);
     return result.ret;
   }
 
@@ -684,12 +723,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getArmor() {
-    if (!this.#ptr) {
+  getArmor(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetArmor(this.#ptr);
+    const result = internal_omp.Player.GetArmor(this.ptr);
     return result.ret;
   }
 
@@ -699,12 +738,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setTeam(team) {
-    if (!this.#ptr) {
+  setTeam(team: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetTeam(this.#ptr, team);
+    const result = internal_omp.Player.SetTeam(this.ptr, team);
     return result.ret;
   }
 
@@ -713,12 +752,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getTeam() {
-    if (!this.#ptr) {
+  getTeam(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetTeam(this.#ptr);
+    const result = internal_omp.Player.GetTeam(this.ptr);
     return result.ret;
   }
 
@@ -728,12 +767,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setScore(score) {
-    if (!this.#ptr) {
+  setScore(score: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetScore(this.#ptr, score);
+    const result = internal_omp.Player.SetScore(this.ptr, score);
     return result.ret;
   }
 
@@ -742,12 +781,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getScore() {
-    if (!this.#ptr) {
+  getScore(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetScore(this.#ptr);
+    const result = internal_omp.Player.GetScore(this.ptr);
     return result.ret;
   }
 
@@ -756,12 +795,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getSkin() {
-    if (!this.#ptr) {
+  getSkin(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSkin(this.#ptr);
+    const result = internal_omp.Player.GetSkin(this.ptr);
     return result.ret;
   }
 
@@ -771,12 +810,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setColor(color) {
-    if (!this.#ptr) {
+  setColor(color: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetColor(this.#ptr, color);
+    const result = internal_omp.Player.SetColor(this.ptr, color);
     return result.ret;
   }
 
@@ -785,12 +824,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getColor() {
-    if (!this.#ptr) {
+  getColor(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetColor(this.#ptr);
+    const result = internal_omp.Player.GetColor(this.ptr);
     return result.ret;
   }
 
@@ -799,12 +838,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getDefaultColor() {
-    if (!this.#ptr) {
+  getDefaultColor(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetDefaultColor(this.#ptr);
+    const result = internal_omp.Player.GetDefaultColor(this.ptr);
     return result.ret;
   }
 
@@ -813,12 +852,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getDrunkLevel() {
-    if (!this.#ptr) {
+  getDrunkLevel(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetDrunkLevel(this.#ptr);
+    const result = internal_omp.Player.GetDrunkLevel(this.ptr);
     return result.ret;
   }
 
@@ -829,12 +868,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  giveWeapon(weapon, ammo) {
-    if (!this.#ptr) {
+  giveWeapon(weapon: number, ammo: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GiveWeapon(this.#ptr, weapon, ammo);
+    const result = internal_omp.Player.GiveWeapon(this.ptr, weapon, ammo);
     return result.ret;
   }
 
@@ -844,12 +883,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  removeWeapon(weapon) {
-    if (!this.#ptr) {
+  removeWeapon(weapon: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.RemoveWeapon(this.#ptr, weapon);
+    const result = internal_omp.Player.RemoveWeapon(this.ptr, weapon);
     return result.ret;
   }
 
@@ -858,12 +897,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getMoney() {
-    if (!this.#ptr) {
+  getMoney(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetMoney(this.#ptr);
+    const result = internal_omp.Player.GetMoney(this.ptr);
     return result.ret;
   }
 
@@ -872,12 +911,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  resetMoney() {
-    if (!this.#ptr) {
+  resetMoney(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ResetMoney(this.#ptr);
+    const result = internal_omp.Player.ResetMoney(this.ptr);
     return result.ret;
   }
 
@@ -887,12 +926,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  setName(name) {
-    if (!this.#ptr) {
+  setName(name: string): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetName(this.#ptr, name);
+    const result = internal_omp.Player.SetName(this.ptr, name);
     return result.ret;
   }
 
@@ -901,12 +940,12 @@ class Player {
    * @returns {{ret: boolean, name: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getName() {
-    if (!this.#ptr) {
+  getName(): { ret: boolean; name: string } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetName(this.#ptr);
+    const result = internal_omp.Player.GetName(this.ptr);
     return result;
   }
 
@@ -915,12 +954,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getState() {
-    if (!this.#ptr) {
+  getState(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetState(this.#ptr);
+    const result = internal_omp.Player.GetState(this.ptr);
     return result.ret;
   }
 
@@ -929,12 +968,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getPing() {
-    if (!this.#ptr) {
+  getPing(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetPing(this.#ptr);
+    const result = internal_omp.Player.GetPing(this.ptr);
     return result.ret;
   }
 
@@ -943,12 +982,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getWeapon() {
-    if (!this.#ptr) {
+  getWeapon(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetWeapon(this.#ptr);
+    const result = internal_omp.Player.GetWeapon(this.ptr);
     return result.ret;
   }
 
@@ -959,12 +998,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setTime(hour, minute) {
-    if (!this.#ptr) {
+  setTime(hour: number, minute: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetTime(this.#ptr, hour, minute);
+    const result = internal_omp.Player.SetTime(this.ptr, hour, minute);
     return result.ret;
   }
 
@@ -973,12 +1012,12 @@ class Player {
    * @returns {{ret: boolean, hour: number,minute: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getTime() {
-    if (!this.#ptr) {
+  getTime(): { ret: boolean; hour: number; minute: number } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetTime(this.#ptr);
+    const result = internal_omp.Player.GetTime(this.ptr);
     return result;
   }
 
@@ -988,12 +1027,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  toggleClock(enable) {
-    if (!this.#ptr) {
+  toggleClock(enable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ToggleClock(this.#ptr, enable);
+    const result = internal_omp.Player.ToggleClock(this.ptr, enable);
     return result.ret;
   }
 
@@ -1002,12 +1041,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  hasClock() {
-    if (!this.#ptr) {
+  hasClock(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.HasClock(this.#ptr);
+    const result = internal_omp.Player.HasClock(this.ptr);
     return result.ret;
   }
 
@@ -1016,12 +1055,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  forceClassSelection() {
-    if (!this.#ptr) {
+  forceClassSelection(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ForceClassSelection(this.#ptr);
+    const result = internal_omp.Player.ForceClassSelection(this.ptr);
     return result.ret;
   }
 
@@ -1030,12 +1069,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getWantedLevel() {
-    if (!this.#ptr) {
+  getWantedLevel(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetWantedLevel(this.#ptr);
+    const result = internal_omp.Player.GetWantedLevel(this.ptr);
     return result.ret;
   }
 
@@ -1045,12 +1084,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setFightingStyle(style) {
-    if (!this.#ptr) {
+  setFightingStyle(style: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetFightingStyle(this.#ptr, style);
+    const result = internal_omp.Player.SetFightingStyle(this.ptr, style);
     return result.ret;
   }
 
@@ -1059,12 +1098,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getFightingStyle() {
-    if (!this.#ptr) {
+  getFightingStyle(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetFightingStyle(this.#ptr);
+    const result = internal_omp.Player.GetFightingStyle(this.ptr);
     return result.ret;
   }
 
@@ -1076,12 +1115,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setVelocity(x, y, z) {
-    if (!this.#ptr) {
+  setVelocity(x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetVelocity(this.#ptr, x, y, z);
+    const result = internal_omp.Player.SetVelocity(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -1090,12 +1129,12 @@ class Player {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getVelocity() {
-    if (!this.#ptr) {
+  getVelocity(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetVelocity(this.#ptr);
+    const result = internal_omp.Player.GetVelocity(this.ptr);
     return result;
   }
 
@@ -1104,12 +1143,12 @@ class Player {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getCameraPos() {
-    if (!this.#ptr) {
+  getCameraPos(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraPos(this.#ptr);
+    const result = internal_omp.Player.GetCameraPos(this.ptr);
     return result;
   }
 
@@ -1121,17 +1160,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getDistanceFromPoint(x, y, z) {
-    if (!this.#ptr) {
+  getDistanceFromPoint(x: number, y: number, z: number): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetDistanceFromPoint(
-      this.#ptr,
-      x,
-      y,
-      z
-    );
+    const result = internal_omp.Player.GetDistanceFromPoint(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -1140,12 +1174,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getInterior() {
-    if (!this.#ptr) {
+  getInterior(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetInterior(this.#ptr);
+    const result = internal_omp.Player.GetInterior(this.ptr);
     return result.ret;
   }
 
@@ -1157,12 +1191,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setPos(x, y, z) {
-    if (!this.#ptr) {
+  setPos(x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetPos(this.#ptr, x, y, z);
+    const result = internal_omp.Player.SetPos(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -1171,12 +1205,12 @@ class Player {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getPos() {
-    if (!this.#ptr) {
+  getPos(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetPos(this.#ptr);
+    const result = internal_omp.Player.GetPos(this.ptr);
     return result;
   }
 
@@ -1185,12 +1219,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getVirtualWorld() {
-    if (!this.#ptr) {
+  getVirtualWorld(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetVirtualWorld(this.#ptr);
+    const result = internal_omp.Player.GetVirtualWorld(this.ptr);
     return result.ret;
   }
 
@@ -1199,12 +1233,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isNPC() {
-    if (!this.#ptr) {
+  isNPC(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsNPC(this.#ptr);
+    const result = internal_omp.Player.IsNPC(this.ptr);
     return result.ret;
   }
 
@@ -1214,15 +1248,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isStreamedIn(other) {
-    if (!this.#ptr) {
+  isStreamedIn(other: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsStreamedIn(
-      this.#ptr,
-      other.getPtr()
-    );
+    const result = internal_omp.Player.IsStreamedIn(this.ptr, other.getPtr());
     return result.ret;
   }
 
@@ -1235,18 +1266,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  playGameSound(sound, x, y, z) {
-    if (!this.#ptr) {
+  playGameSound(sound: number, x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.PlayGameSound(
-      this.#ptr,
-      sound,
-      x,
-      y,
-      z
-    );
+    const result = internal_omp.Player.PlayGameSound(this.ptr, sound, x, y, z);
     return result.ret;
   }
 
@@ -1257,13 +1282,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  spectatePlayer(target, mode) {
-    if (!this.#ptr) {
+  spectatePlayer(target: Player, mode: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SpectatePlayer(
-      this.#ptr,
+    const result = internal_omp.Player.SpectatePlayer(
+      this.ptr,
       target.getPtr(),
       mode
     );
@@ -1277,13 +1302,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  spectateVehicle(target, mode) {
-    if (!this.#ptr) {
+  spectateVehicle(target: Player, mode: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SpectateVehicle(
-      this.#ptr,
+    const result = internal_omp.Player.SpectateVehicle(
+      this.ptr,
       target.getPtr(),
       mode
     );
@@ -1296,12 +1321,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setVirtualWorld(vw) {
-    if (!this.#ptr) {
+  setVirtualWorld(vw: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetVirtualWorld(this.#ptr, vw);
+    const result = internal_omp.Player.SetVirtualWorld(this.ptr, vw);
     return result.ret;
   }
 
@@ -1314,13 +1339,18 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setWorldBounds(xMax, xMin, yMax, yMin) {
-    if (!this.#ptr) {
+  setWorldBounds(
+    xMax: number,
+    xMin: number,
+    yMax: number,
+    yMin: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetWorldBounds(
-      this.#ptr,
+    const result = internal_omp.Player.SetWorldBounds(
+      this.ptr,
       xMax,
       xMin,
       yMax,
@@ -1334,12 +1364,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  clearWorldBounds() {
-    if (!this.#ptr) {
+  clearWorldBounds(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ClearWorldBounds(this.#ptr);
+    const result = internal_omp.Player.ClearWorldBounds(this.ptr);
     return result.ret;
   }
 
@@ -1348,12 +1378,18 @@ class Player {
    * @returns {{ret: boolean, xmax: number,xmin: number,ymax: number,ymin: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getWorldBounds() {
-    if (!this.#ptr) {
+  getWorldBounds(): {
+    ret: boolean;
+    xmax: number;
+    xmin: number;
+    ymax: number;
+    ymin: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetWorldBounds(this.#ptr);
+    const result = internal_omp.Player.GetWorldBounds(this.ptr);
     return result;
   }
 
@@ -1363,12 +1399,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  clearAnimations(syncType) {
-    if (!this.#ptr) {
+  clearAnimations(syncType: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ClearAnimations(this.#ptr, syncType);
+    const result = internal_omp.Player.ClearAnimations(this.ptr, syncType);
     return result.ret;
   }
 
@@ -1377,12 +1413,20 @@ class Player {
    * @returns {{ret: boolean, origin_x: number,origin_y: number,origin_z: number,hit_x: number,hit_y: number,hit_z: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getLastShotVectors() {
-    if (!this.#ptr) {
+  getLastShotVectors(): {
+    ret: boolean;
+    originX: number;
+    originY: number;
+    originZ: number;
+    hitX: number;
+    hitY: number;
+    hitZ: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetLastShotVectors(this.#ptr);
+    const result = internal_omp.Player.GetLastShotVectors(this.ptr);
     return result;
   }
 
@@ -1391,12 +1435,12 @@ class Player {
    * @returns {Player}
    * @throws Will throw an error if the player is invalid
    */
-  getCameraTargetPlayer() {
-    if (!this.#ptr) {
+  getCameraTargetPlayer(): Player {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraTargetPlayer(this.#ptr);
+    const result = internal_omp.Player.GetCameraTargetPlayer(this.ptr);
     return result.ret;
   }
 
@@ -1405,12 +1449,12 @@ class Player {
    * @returns {Actor}
    * @throws Will throw an error if the player is invalid
    */
-  getCameraTargetActor() {
-    if (!this.#ptr) {
+  getCameraTargetActor(): Actor {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraTargetActor(this.#ptr);
+    const result = internal_omp.Player.GetCameraTargetActor(this.ptr);
     return result.ret;
   }
 
@@ -1419,12 +1463,12 @@ class Player {
    * @returns {ObjectMp}
    * @throws Will throw an error if the player is invalid
    */
-  getCameraTargetObject() {
-    if (!this.#ptr) {
+  getCameraTargetObject(): ObjectMp {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraTargetObject(this.#ptr);
+    const result = internal_omp.Player.GetCameraTargetObject(this.ptr);
     return result.ret;
   }
 
@@ -1433,12 +1477,12 @@ class Player {
    * @returns {Vehicle}
    * @throws Will throw an error if the player is invalid
    */
-  getCameraTargetVehicle() {
-    if (!this.#ptr) {
+  getCameraTargetVehicle(): Vehicle {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraTargetVehicle(this.#ptr);
+    const result = internal_omp.Player.GetCameraTargetVehicle(this.ptr);
     return result.ret;
   }
 
@@ -1449,13 +1493,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  putInVehicle(vehicle, seat) {
-    if (!this.#ptr) {
+  putInVehicle(vehicle: Vehicle, seat: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.PutInVehicle(
-      this.#ptr,
+    const result = internal_omp.Player.PutInVehicle(
+      this.ptr,
       vehicle.getPtr(),
       seat
     );
@@ -1472,13 +1516,19 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  removeBuilding(model, x, y, z, radius) {
-    if (!this.#ptr) {
+  removeBuilding(
+    model: number,
+    x: number,
+    y: number,
+    z: number,
+    radius: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.RemoveBuilding(
-      this.#ptr,
+    const result = internal_omp.Player.RemoveBuilding(
+      this.ptr,
       model,
       x,
       y,
@@ -1493,12 +1543,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getBuildingsRemoved() {
-    if (!this.#ptr) {
+  getBuildingsRemoved(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetBuildingsRemoved(this.#ptr);
+    const result = internal_omp.Player.GetBuildingsRemoved(this.ptr);
     return result.ret;
   }
 
@@ -1507,12 +1557,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  removeFromVehicle() {
-    if (!this.#ptr) {
+  removeFromVehicle(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.RemoveFromVehicle(this.#ptr, false);
+    const result = internal_omp.Player.RemoveFromVehicle(this.ptr, false);
     return result.ret;
   }
 
@@ -1522,12 +1572,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  removeMapIcon(icon) {
-    if (!this.#ptr) {
+  removeMapIcon(icon: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.RemoveMapIcon(this.#ptr, icon);
+    const result = internal_omp.Player.RemoveMapIcon(this.ptr, icon);
     return result.ret;
   }
 
@@ -1543,13 +1593,21 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setMapIcon(iconID, x, y, z, type, color, style) {
-    if (!this.#ptr) {
+  setMapIcon(
+    iconID: number,
+    x: number,
+    y: number,
+    z: number,
+    type: number,
+    color: number,
+    style: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetMapIcon(
-      this.#ptr,
+    const result = internal_omp.Player.SetMapIcon(
+      this.ptr,
       iconID,
       x,
       y,
@@ -1566,12 +1624,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  resetWeapons() {
-    if (!this.#ptr) {
+  resetWeapons(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ResetWeapons(this.#ptr);
+    const result = internal_omp.Player.ResetWeapons(this.ptr);
     return result.ret;
   }
 
@@ -1582,12 +1640,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setAmmo(id, ammo) {
-    if (!this.#ptr) {
+  setAmmo(id: number, ammo: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetAmmo(this.#ptr, id, ammo);
+    const result = internal_omp.Player.SetAmmo(this.ptr, id, ammo);
     return result.ret;
   }
 
@@ -1597,12 +1655,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setArmedWeapon(weapon) {
-    if (!this.#ptr) {
+  setArmedWeapon(weapon: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetArmedWeapon(this.#ptr, weapon);
+    const result = internal_omp.Player.SetArmedWeapon(this.ptr, weapon);
     return result.ret;
   }
 
@@ -1615,13 +1673,18 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setChatBubble(text, color, drawdistance, expiretime) {
-    if (!this.#ptr) {
+  setChatBubble(
+    text: string,
+    color: number,
+    drawdistance: number,
+    expiretime: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetChatBubble(
-      this.#ptr,
+    const result = internal_omp.Player.SetChatBubble(
+      this.ptr,
       text,
       color,
       drawdistance,
@@ -1638,12 +1701,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setPosFindZ(x, y, z) {
-    if (!this.#ptr) {
+  setPosFindZ(x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetPosFindZ(this.#ptr, x, y, z);
+    const result = internal_omp.Player.SetPosFindZ(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -1654,16 +1717,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setSkillLevel(weapon, level) {
-    if (!this.#ptr) {
+  setSkillLevel(weapon: number, level: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetSkillLevel(
-      this.#ptr,
-      weapon,
-      level
-    );
+    const result = internal_omp.Player.SetSkillLevel(this.ptr, weapon, level);
     return result.ret;
   }
 
@@ -1673,12 +1732,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setSpecialAction(action) {
-    if (!this.#ptr) {
+  setSpecialAction(action: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetSpecialAction(this.#ptr, action);
+    const result = internal_omp.Player.SetSpecialAction(this.ptr, action);
     return result.ret;
   }
 
@@ -1689,13 +1748,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  showNameTagForPlayer(other, enable) {
-    if (!this.#ptr) {
+  showNameTagForPlayer(other: Player, enable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ShowNameTagForPlayer(
-      this.#ptr,
+    const result = internal_omp.Player.ShowNameTagForPlayer(
+      this.ptr,
       other.getPtr(),
       enable
     );
@@ -1708,12 +1767,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  toggleControllable(enable) {
-    if (!this.#ptr) {
+  toggleControllable(enable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ToggleControllable(this.#ptr, enable);
+    const result = internal_omp.Player.ToggleControllable(this.ptr, enable);
     return result.ret;
   }
 
@@ -1723,12 +1782,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  toggleSpectating(enable) {
-    if (!this.#ptr) {
+  toggleSpectating(enable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ToggleSpectating(this.#ptr, enable);
+    const result = internal_omp.Player.ToggleSpectating(this.ptr, enable);
     return result.ret;
   }
 
@@ -1747,22 +1806,22 @@ class Player {
    * @throws Will throw an error if the player is invalid
    */
   applyAnimation(
-    animlib,
-    animname,
-    delta,
-    loop,
-    lockX,
-    lockY,
-    freeze,
-    time,
-    sync
-  ) {
-    if (!this.#ptr) {
+    animlib: string,
+    animname: string,
+    delta: number,
+    loop: boolean,
+    lockX: boolean,
+    lockY: boolean,
+    freeze: boolean,
+    time: number,
+    sync: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ApplyAnimation(
-      this.#ptr,
+    const result = internal_omp.Player.ApplyAnimation(
+      this.ptr,
       animlib,
       animname,
       delta,
@@ -1782,8 +1841,12 @@ class Player {
    * @returns {{ret: boolean, lib: string,name: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  static getAnimationName(index) {
-    const result = __internal_omp.Player.GetAnimationName(index);
+  static getAnimationName(index: number): {
+    ret: boolean;
+    lib: string;
+    name: string;
+  } {
+    const result = internal_omp.Player.GetAnimationName(index);
     return result;
   }
 
@@ -1793,12 +1856,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  editAttachedObject(index) {
-    if (!this.#ptr) {
+  editAttachedObject(index: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.EditAttachedObject(this.#ptr, index);
+    const result = internal_omp.Player.EditAttachedObject(this.ptr, index);
     return result.ret;
   }
 
@@ -1808,12 +1871,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  enableCameraTarget(enable) {
-    if (!this.#ptr) {
+  enableCameraTarget(enable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.EnableCameraTarget(this.#ptr, enable);
+    const result = internal_omp.Player.EnableCameraTarget(this.ptr, enable);
     return result.ret;
   }
 
@@ -1823,12 +1886,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  enableStuntBonus(enable) {
-    if (!this.#ptr) {
+  enableStuntBonus(enable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.EnableStuntBonus(this.#ptr, enable);
+    const result = internal_omp.Player.EnableStuntBonus(this.ptr, enable);
     return result.ret;
   }
 
@@ -1837,12 +1900,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getPlayerAmmo() {
-    if (!this.#ptr) {
+  getPlayerAmmo(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetPlayerAmmo(this.#ptr);
+    const result = internal_omp.Player.GetPlayerAmmo(this.ptr);
     return result.ret;
   }
 
@@ -1851,12 +1914,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getAnimationIndex() {
-    if (!this.#ptr) {
+  getAnimationIndex(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetAnimationIndex(this.#ptr);
+    const result = internal_omp.Player.GetAnimationIndex(this.ptr);
     return result.ret;
   }
 
@@ -1865,12 +1928,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getFacingAngle() {
-    if (!this.#ptr) {
+  getFacingAngle(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetFacingAngle(this.#ptr);
+    const result = internal_omp.Player.GetFacingAngle(this.ptr);
     return result.ret;
   }
 
@@ -1879,12 +1942,12 @@ class Player {
    * @returns {{ret: boolean, ip: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getIp() {
-    if (!this.#ptr) {
+  getIp(): { ret: boolean; ip: string } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetIp(this.#ptr);
+    const result = internal_omp.Player.GetIp(this.ptr);
     return result;
   }
 
@@ -1893,12 +1956,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getSpecialAction() {
-    if (!this.#ptr) {
+  getSpecialAction(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSpecialAction(this.#ptr);
+    const result = internal_omp.Player.GetSpecialAction(this.ptr);
     return result.ret;
   }
 
@@ -1907,12 +1970,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getVehicleID() {
-    if (!this.#ptr) {
+  getVehicleID(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetVehicleID(this.#ptr);
+    const result = internal_omp.Player.GetVehicleID(this.ptr);
     return result.ret;
   }
 
@@ -1921,12 +1984,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getVehicleSeat() {
-    if (!this.#ptr) {
+  getVehicleSeat(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetVehicleSeat(this.#ptr);
+    const result = internal_omp.Player.GetVehicleSeat(this.ptr);
     return result.ret;
   }
 
@@ -1936,12 +1999,16 @@ class Player {
    * @returns {{ret: boolean, weaponid: number,ammo: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getWeaponData(slot) {
-    if (!this.#ptr) {
+  getWeaponData(slot: number): {
+    ret: boolean;
+    weaponid: number;
+    ammo: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetWeaponData(this.#ptr, slot);
+    const result = internal_omp.Player.GetWeaponData(this.ptr, slot);
     return result;
   }
 
@@ -1950,12 +2017,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getWeaponState() {
-    if (!this.#ptr) {
+  getWeaponState(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetWeaponState(this.#ptr);
+    const result = internal_omp.Player.GetWeaponState(this.ptr);
     return result.ret;
   }
 
@@ -1972,13 +2039,22 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  interpolateCameraPos(from_x, from_y, from_z, to_x, to_y, to_z, time, cut) {
-    if (!this.#ptr) {
+  interpolateCameraPos(
+    from_x: number,
+    from_y: number,
+    from_z: number,
+    to_x: number,
+    to_y: number,
+    to_z: number,
+    time: number,
+    cut: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.InterpolateCameraPos(
-      this.#ptr,
+    const result = internal_omp.Player.InterpolateCameraPos(
+      this.ptr,
       from_x,
       from_y,
       from_z,
@@ -2004,13 +2080,22 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  interpolateCameraLookAt(from_x, from_y, from_z, to_x, to_y, to_z, time, cut) {
-    if (!this.#ptr) {
+  interpolateCameraLookAt(
+    from_x: number,
+    from_y: number,
+    from_z: number,
+    to_x: number,
+    to_y: number,
+    to_z: number,
+    time: number,
+    cut: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.InterpolateCameraLookAt(
-      this.#ptr,
+    const result = internal_omp.Player.InterpolateCameraLookAt(
+      this.ptr,
       from_x,
       from_y,
       from_z,
@@ -2029,13 +2114,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isPlayerAttachedObjectSlotUsed(index) {
-    if (!this.#ptr) {
+  isPlayerAttachedObjectSlotUsed(index: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsPlayerAttachedObjectSlotUsed(
-      this.#ptr,
+    const result = internal_omp.Player.IsPlayerAttachedObjectSlotUsed(
+      this.ptr,
       index
     );
     return result.ret;
@@ -2047,13 +2132,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  attachCameraToObject(object) {
-    if (!this.#ptr) {
+  attachCameraToObject(object: ObjectMp): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.AttachCameraToObject(
-      this.#ptr,
+    const result = internal_omp.Player.AttachCameraToObject(
+      this.ptr,
       object.getPtr()
     );
     return result.ret;
@@ -2065,13 +2150,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  attachCameraToPlayerObject(object) {
-    if (!this.#ptr) {
+  attachCameraToPlayerObject(object: ObjectMp): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.AttachCameraToPlayerObject(
-      this.#ptr,
+    const result = internal_omp.Player.AttachCameraToPlayerObject(
+      this.ptr,
       object.getPtr()
     );
     return result.ret;
@@ -2082,12 +2167,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getCameraAspectRatio() {
-    if (!this.#ptr) {
+  getCameraAspectRatio(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraAspectRatio(this.#ptr);
+    const result = internal_omp.Player.GetCameraAspectRatio(this.ptr);
     return result.ret;
   }
 
@@ -2096,12 +2181,12 @@ class Player {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getCameraFrontVector() {
-    if (!this.#ptr) {
+  getCameraFrontVector(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraFrontVector(this.#ptr);
+    const result = internal_omp.Player.GetCameraFrontVector(this.ptr);
     return result;
   }
 
@@ -2110,12 +2195,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getCameraMode() {
-    if (!this.#ptr) {
+  getCameraMode(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraMode(this.#ptr);
+    const result = internal_omp.Player.GetCameraMode(this.ptr);
     return result.ret;
   }
 
@@ -2124,12 +2209,12 @@ class Player {
    * @returns {{ret: boolean, keys: number,updown: number,leftright: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getKeys() {
-    if (!this.#ptr) {
+  getKeys(): { ret: boolean; keys: number; updown: number; leftright: number } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetKeys(this.#ptr);
+    const result = internal_omp.Player.GetKeys(this.ptr);
     return result;
   }
 
@@ -2138,12 +2223,12 @@ class Player {
    * @returns {Vehicle}
    * @throws Will throw an error if the player is invalid
    */
-  getSurfingVehicle() {
-    if (!this.#ptr) {
+  getSurfingVehicle(): Vehicle {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSurfingVehicle(this.#ptr);
+    const result = internal_omp.Player.GetSurfingVehicle(this.ptr);
     return result.ret;
   }
 
@@ -2152,12 +2237,12 @@ class Player {
    * @returns {ObjectMp}
    * @throws Will throw an error if the player is invalid
    */
-  getSurfingObject() {
-    if (!this.#ptr) {
+  getSurfingObject(): ObjectMp {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSurfingObject(this.#ptr);
+    const result = internal_omp.Player.GetSurfingObject(this.ptr);
     return result.ret;
   }
 
@@ -2166,12 +2251,12 @@ class Player {
    * @returns {Player}
    * @throws Will throw an error if the player is invalid
    */
-  getTargetPlayer() {
-    if (!this.#ptr) {
+  getTargetPlayer(): Player {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetTargetPlayer(this.#ptr);
+    const result = internal_omp.Player.GetTargetPlayer(this.ptr);
     return result.ret;
   }
 
@@ -2180,12 +2265,12 @@ class Player {
    * @returns {Actor}
    * @throws Will throw an error if the player is invalid
    */
-  getTargetActor() {
-    if (!this.#ptr) {
+  getTargetActor(): Actor {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetTargetActor(this.#ptr);
+    const result = internal_omp.Player.GetTargetActor(this.ptr);
     return result.ret;
   }
 
@@ -2195,13 +2280,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isInVehicle(targetVehicle) {
-    if (!this.#ptr) {
+  isInVehicle(targetVehicle: Vehicle): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsInVehicle(
-      this.#ptr,
+    const result = internal_omp.Player.IsInVehicle(
+      this.ptr,
       targetVehicle.getPtr()
     );
     return result.ret;
@@ -2212,12 +2297,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isInAnyVehicle() {
-    if (!this.#ptr) {
+  isInAnyVehicle(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsInAnyVehicle(this.#ptr);
+    const result = internal_omp.Player.IsInAnyVehicle(this.ptr);
     return result.ret;
   }
 
@@ -2230,13 +2315,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isInRangeOfPoint(range, x, y, z) {
-    if (!this.#ptr) {
+  isInRangeOfPoint(range: number, x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsInRangeOfPoint(
-      this.#ptr,
+    const result = internal_omp.Player.IsInRangeOfPoint(
+      this.ptr,
       range,
       x,
       y,
@@ -2252,13 +2337,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  playCrimeReport(suspect, crime) {
-    if (!this.#ptr) {
+  playCrimeReport(suspect: Player, crime: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.PlayCrimeReport(
-      this.#ptr,
+    const result = internal_omp.Player.PlayCrimeReport(
+      this.ptr,
       suspect.getPtr(),
       crime
     );
@@ -2271,12 +2356,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  removeAttachedObject(index) {
-    if (!this.#ptr) {
+  removeAttachedObject(index: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.RemoveAttachedObject(this.#ptr, index);
+    const result = internal_omp.Player.RemoveAttachedObject(this.ptr, index);
     return result.ret;
   }
 
@@ -2300,27 +2385,27 @@ class Player {
    * @throws Will throw an error if the player is invalid
    */
   setAttachedObject(
-    index,
-    modelid,
-    bone,
-    offsetX,
-    offsetY,
-    offsetZ,
-    rotationX,
-    rotationY,
-    rotationZ,
-    scaleX,
-    scaleY,
-    scaleZ,
-    materialcolor1,
-    materialcolor2
-  ) {
-    if (!this.#ptr) {
+    index: number,
+    modelid: number,
+    bone: number,
+    offsetX: number,
+    offsetY: number,
+    offsetZ: number,
+    rotationX: number,
+    rotationY: number,
+    rotationZ: number,
+    scaleX: number,
+    scaleY: number,
+    scaleZ: number,
+    materialcolor1: number,
+    materialcolor2: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetAttachedObject(
-      this.#ptr,
+    const result = internal_omp.Player.SetAttachedObject(
+      this.ptr,
       index,
       modelid,
       bone,
@@ -2345,12 +2430,27 @@ class Player {
    * @returns {{ret: boolean, modelid: number,bone: number,offsetX: number,offsetY: number,offsetZ: number,rotationX: number,rotationY: number,rotationZ: number,scaleX: number,scaleY: number,scaleZ: number,materialcolor1: number,materialcolor2: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getAttachedObject(index) {
-    if (!this.#ptr) {
+  getAttachedObject(index: number): {
+    ret: boolean;
+    modelid: number;
+    bone: number;
+    offsetX: number;
+    offsetY: number;
+    offsetZ: number;
+    rotationX: number;
+    rotationY: number;
+    rotationZ: number;
+    scaleX: number;
+    scaleY: number;
+    scaleZ: number;
+    materialcolor1: number;
+    materialcolor2: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetAttachedObject(this.#ptr, index);
+    const result = internal_omp.Player.GetAttachedObject(this.ptr, index);
     return result;
   }
 
@@ -2360,12 +2460,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setFacingAngle(angle) {
-    if (!this.#ptr) {
+  setFacingAngle(angle: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetFacingAngle(this.#ptr, angle);
+    const result = internal_omp.Player.SetFacingAngle(this.ptr, angle);
     return result.ret;
   }
 
@@ -2376,13 +2476,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setMarkerForPlayer(other, color) {
-    if (!this.#ptr) {
+  setMarkerForPlayer(other: Player, color: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetMarkerForPlayer(
-      this.#ptr,
+    const result = internal_omp.Player.SetMarkerForPlayer(
+      this.ptr,
       other.getPtr(),
       color
     );
@@ -2395,13 +2495,13 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getMarkerForPlayer(other) {
-    if (!this.#ptr) {
+  getMarkerForPlayer(other: Player): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetMarkerForPlayer(
-      this.#ptr,
+    const result = internal_omp.Player.GetMarkerForPlayer(
+      this.ptr,
       other.getPtr()
     );
     return result.ret;
@@ -2413,12 +2513,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  allowTeleport(allow) {
-    if (!this.#ptr) {
+  allowTeleport(allow: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.AllowTeleport(this.#ptr, allow);
+    const result = internal_omp.Player.AllowTeleport(this.ptr, allow);
     return result.ret;
   }
 
@@ -2427,12 +2527,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isTeleportAllowed() {
-    if (!this.#ptr) {
+  isTeleportAllowed(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsTeleportAllowed(this.#ptr);
+    const result = internal_omp.Player.IsTeleportAllowed(this.ptr);
     return result.ret;
   }
 
@@ -2442,13 +2542,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  disableRemoteVehicleCollisions(disable) {
-    if (!this.#ptr) {
+  disableRemoteVehicleCollisions(disable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.DisableRemoteVehicleCollisions(
-      this.#ptr,
+    const result = internal_omp.Player.DisableRemoteVehicleCollisions(
+      this.ptr,
       disable
     );
     return result.ret;
@@ -2459,12 +2559,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getCameraZoom() {
-    if (!this.#ptr) {
+  getCameraZoom(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetCameraZoom(this.#ptr);
+    const result = internal_omp.Player.GetCameraZoom(this.ptr);
     return result.ret;
   }
 
@@ -2474,12 +2574,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  selectTextDraw(hoverColour) {
-    if (!this.#ptr) {
+  selectTextDraw(hoverColour: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SelectTextDraw(this.#ptr, hoverColour);
+    const result = internal_omp.Player.SelectTextDraw(this.ptr, hoverColour);
     return result.ret;
   }
 
@@ -2488,12 +2588,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  cancelSelectTextDraw() {
-    if (!this.#ptr) {
+  cancelSelectTextDraw(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.CancelSelectTextDraw(this.#ptr);
+    const result = internal_omp.Player.CancelSelectTextDraw(this.ptr);
     return result.ret;
   }
 
@@ -2506,13 +2606,18 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  sendClientCheck(actionType, address, offset, count) {
-    if (!this.#ptr) {
+  sendClientCheck(
+    actionType: number,
+    address: number,
+    offset: number,
+    count: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SendClientCheck(
-      this.#ptr,
+    const result = internal_omp.Player.SendClientCheck(
+      this.ptr,
       actionType,
       address,
       offset,
@@ -2526,12 +2631,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  spawn() {
-    if (!this.#ptr) {
+  spawn(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.Spawn(this.#ptr);
+    const result = internal_omp.Player.Spawn(this.ptr);
     return result.ret;
   }
 
@@ -2540,12 +2645,12 @@ class Player {
    * @returns {{ret: boolean, gpci: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  gPCI() {
-    if (!this.#ptr) {
+  gPCI(): { ret: boolean; gpci: string } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GPCI(this.#ptr);
+    const result = internal_omp.Player.GPCI(this.ptr);
     return result;
   }
 
@@ -2554,12 +2659,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isAdmin() {
-    if (!this.#ptr) {
+  isAdmin(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsAdmin(this.#ptr);
+    const result = internal_omp.Player.IsAdmin(this.ptr);
     return result.ret;
   }
 
@@ -2568,12 +2673,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  kick() {
-    if (!this.#ptr) {
+  kick(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.Kick(this.#ptr);
+    const result = internal_omp.Player.Kick(this.ptr);
     return result.ret;
   }
 
@@ -2585,13 +2690,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  showGameText(text, time, style) {
-    if (!this.#ptr) {
+  showGameText(text: string, time: number, style: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ShowGameText(
-      this.#ptr,
+    const result = internal_omp.Player.ShowGameText(
+      this.ptr,
       text,
       time,
       style
@@ -2605,12 +2710,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  hideGameText(style) {
-    if (!this.#ptr) {
+  hideGameText(style: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.HideGameText(this.#ptr, style);
+    const result = internal_omp.Player.HideGameText(this.ptr, style);
     return result.ret;
   }
 
@@ -2620,12 +2725,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  hasGameText(style) {
-    if (!this.#ptr) {
+  hasGameText(style: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.HasGameText(this.#ptr, style);
+    const result = internal_omp.Player.HasGameText(this.ptr, style);
     return result.ret;
   }
 
@@ -2635,12 +2740,17 @@ class Player {
    * @returns {{ret: boolean, message: string,time: number,remaining: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getGameText(style) {
-    if (!this.#ptr) {
+  getGameText(style: number): {
+    ret: boolean;
+    message: string;
+    time: number;
+    remaining: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetGameText(this.#ptr, style);
+    const result = internal_omp.Player.GetGameText(this.ptr, style);
     return result;
   }
 
@@ -2649,12 +2759,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  ban() {
-    if (!this.#ptr) {
+  ban(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.Ban(this.#ptr);
+    const result = internal_omp.Player.Ban(this.ptr);
     return result.ret;
   }
 
@@ -2664,12 +2774,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  banEx(reason) {
-    if (!this.#ptr) {
+  banEx(reason: string): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.BanEx(this.#ptr, reason);
+    const result = internal_omp.Player.BanEx(this.ptr, reason);
     return result.ret;
   }
 
@@ -2681,13 +2791,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  sendDeathMessage(killer, killee, weapon) {
-    if (!this.#ptr) {
+  sendDeathMessage(killer: Player, killee: Player, weapon: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SendDeathMessage(
-      this.#ptr,
+    const result = internal_omp.Player.SendDeathMessage(
+      this.ptr,
       killer.getPtr(),
       killee.getPtr(),
       weapon
@@ -2702,13 +2812,13 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  sendMessageToPlayer(sender, message) {
-    if (!this.#ptr) {
+  sendMessageToPlayer(sender: Player, message: string): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SendMessageToPlayer(
-      this.#ptr,
+    const result = internal_omp.Player.SendMessageToPlayer(
+      this.ptr,
       sender.getPtr(),
       message
     );
@@ -2720,12 +2830,12 @@ class Player {
    * @returns {{ret: boolean, version: string}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getVersion() {
-    if (!this.#ptr) {
+  getVersion(): { ret: boolean; version: string } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetVersion(this.#ptr);
+    const result = internal_omp.Player.GetVersion(this.ptr);
     return result;
   }
 
@@ -2735,12 +2845,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getSkillLevel(skill) {
-    if (!this.#ptr) {
+  getSkillLevel(skill: number): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSkillLevel(this.#ptr, skill);
+    const result = internal_omp.Player.GetSkillLevel(this.ptr, skill);
     return result.ret;
   }
 
@@ -2749,12 +2859,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getZAim() {
-    if (!this.#ptr) {
+  getZAim(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetZAim(this.#ptr);
+    const result = internal_omp.Player.GetZAim(this.ptr);
     return result.ret;
   }
 
@@ -2763,12 +2873,17 @@ class Player {
    * @returns {{ret: boolean, offsetX: number,offsetY: number,offsetZ: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getSurfingOffsets() {
-    if (!this.#ptr) {
+  getSurfingOffsets(): {
+    ret: boolean;
+    offsetX: number;
+    offsetY: number;
+    offsetZ: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSurfingOffsets(this.#ptr);
+    const result = internal_omp.Player.GetSurfingOffsets(this.ptr);
     return result;
   }
 
@@ -2777,12 +2892,18 @@ class Player {
    * @returns {{ret: boolean, x: number,y: number,z: number,w: number}} return object
    * @throws Will throw an error if the player is invalid
    */
-  getRotationQuat() {
-    if (!this.#ptr) {
+  getRotationQuat(): {
+    ret: boolean;
+    x: number;
+    y: number;
+    z: number;
+    w: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetRotationQuat(this.#ptr);
+    const result = internal_omp.Player.GetRotationQuat(this.ptr);
     return result;
   }
 
@@ -2791,12 +2912,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getPlayerSpectateID() {
-    if (!this.#ptr) {
+  getPlayerSpectateID(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetPlayerSpectateID(this.#ptr);
+    const result = internal_omp.Player.GetPlayerSpectateID(this.ptr);
     return result.ret;
   }
 
@@ -2805,12 +2926,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getSpectateType() {
-    if (!this.#ptr) {
+  getSpectateType(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSpectateType(this.#ptr);
+    const result = internal_omp.Player.GetSpectateType(this.ptr);
     return result.ret;
   }
 
@@ -2819,12 +2940,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getRawIp() {
-    if (!this.#ptr) {
+  getRawIp(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetRawIp(this.#ptr);
+    const result = internal_omp.Player.GetRawIp(this.ptr);
     return result.ret;
   }
 
@@ -2834,12 +2955,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setGravity(gravity) {
-    if (!this.#ptr) {
+  setGravity(gravity: number): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetGravity(this.#ptr, gravity);
+    const result = internal_omp.Player.SetGravity(this.ptr, gravity);
     return result.ret;
   }
 
@@ -2848,12 +2969,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getGravity() {
-    if (!this.#ptr) {
+  getGravity(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetGravity(this.#ptr);
+    const result = internal_omp.Player.GetGravity(this.ptr);
     return result.ret;
   }
 
@@ -2863,12 +2984,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  setAdmin(set) {
-    if (!this.#ptr) {
+  setAdmin(set: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.SetAdmin(this.#ptr, set);
+    const result = internal_omp.Player.SetAdmin(this.ptr, set);
     return result.ret;
   }
 
@@ -2877,12 +2998,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isSpawned() {
-    if (!this.#ptr) {
+  isSpawned(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsSpawned(this.#ptr);
+    const result = internal_omp.Player.IsSpawned(this.ptr);
     return result.ret;
   }
 
@@ -2891,12 +3012,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isControllable() {
-    if (!this.#ptr) {
+  isControllable(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsControllable(this.#ptr);
+    const result = internal_omp.Player.IsControllable(this.ptr);
     return result.ret;
   }
 
@@ -2905,12 +3026,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isCameraTargetEnabled() {
-    if (!this.#ptr) {
+  isCameraTargetEnabled(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsCameraTargetEnabled(this.#ptr);
+    const result = internal_omp.Player.IsCameraTargetEnabled(this.ptr);
     return result.ret;
   }
 
@@ -2920,12 +3041,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  toggleGhostMode(toggle) {
-    if (!this.#ptr) {
+  toggleGhostMode(toggle: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.ToggleGhostMode(this.#ptr, toggle);
+    const result = internal_omp.Player.ToggleGhostMode(this.ptr, toggle);
     return result.ret;
   }
 
@@ -2934,12 +3055,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  getGhostMode() {
-    if (!this.#ptr) {
+  getGhostMode(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetGhostMode(this.#ptr);
+    const result = internal_omp.Player.GetGhostMode(this.ptr);
     return result.ret;
   }
 
@@ -2949,12 +3070,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  allowWeapons(allow) {
-    if (!this.#ptr) {
+  allowWeapons(allow: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.AllowWeapons(this.#ptr, allow);
+    const result = internal_omp.Player.AllowWeapons(this.ptr, allow);
     return result.ret;
   }
 
@@ -2963,12 +3084,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  areWeaponsAllowed() {
-    if (!this.#ptr) {
+  areWeaponsAllowed(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.AreWeaponsAllowed(this.#ptr);
+    const result = internal_omp.Player.AreWeaponsAllowed(this.ptr);
     return result.ret;
   }
 
@@ -2977,12 +3098,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isPlayerUsingOfficialClient() {
-    if (!this.#ptr) {
+  isPlayerUsingOfficialClient(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsPlayerUsingOfficialClient(this.#ptr);
+    const result = internal_omp.Player.IsPlayerUsingOfficialClient(this.ptr);
     return result.ret;
   }
 
@@ -2991,12 +3112,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getAnimationFlags() {
-    if (!this.#ptr) {
+  getAnimationFlags(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetAnimationFlags(this.#ptr);
+    const result = internal_omp.Player.GetAnimationFlags(this.ptr);
     return result.ret;
   }
 
@@ -3005,12 +3126,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isInDriveByMode() {
-    if (!this.#ptr) {
+  isInDriveByMode(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsInDriveByMode(this.#ptr);
+    const result = internal_omp.Player.IsInDriveByMode(this.ptr);
     return result.ret;
   }
 
@@ -3019,12 +3140,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isCuffed() {
-    if (!this.#ptr) {
+  isCuffed(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsCuffed(this.#ptr);
+    const result = internal_omp.Player.IsCuffed(this.ptr);
     return result.ret;
   }
 
@@ -3033,12 +3154,12 @@ class Player {
    * @returns {boolean}
    * @throws Will throw an error if the player is invalid
    */
-  isInModShop() {
-    if (!this.#ptr) {
+  isInModShop(): boolean {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.IsInModShop(this.#ptr);
+    const result = internal_omp.Player.IsInModShop(this.ptr);
     return result.ret;
   }
 
@@ -3047,12 +3168,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getSirenState() {
-    if (!this.#ptr) {
+  getSirenState(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetSirenState(this.#ptr);
+    const result = internal_omp.Player.GetSirenState(this.ptr);
     return result.ret;
   }
 
@@ -3061,12 +3182,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getLandingGearState() {
-    if (!this.#ptr) {
+  getLandingGearState(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetLandingGearState(this.#ptr);
+    const result = internal_omp.Player.GetLandingGearState(this.ptr);
     return result.ret;
   }
 
@@ -3075,12 +3196,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getHydraReactorAngle() {
-    if (!this.#ptr) {
+  getHydraReactorAngle(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetHydraReactorAngle(this.#ptr);
+    const result = internal_omp.Player.GetHydraReactorAngle(this.ptr);
     return result.ret;
   }
 
@@ -3089,14 +3210,12 @@ class Player {
    * @returns {number}
    * @throws Will throw an error if the player is invalid
    */
-  getTrainSpeed() {
-    if (!this.#ptr) {
+  getTrainSpeed(): number {
+    if (!this.ptr) {
       throw new Error("Player instance is not valid");
     }
 
-    const result = __internal_omp.Player.GetTrainSpeed(this.#ptr);
+    const result = internal_omp.Player.GetTrainSpeed(this.ptr);
     return result.ret;
   }
 }
-
-export default Player;

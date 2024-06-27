@@ -1,0 +1,4 @@
+.vscode
+.npmrc
+node_modules
+dist

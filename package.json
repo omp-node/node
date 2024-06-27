@@ -1,10 +1,47 @@
 {
   "name": "@open.mp/node",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "open.mp nodejs package. contains constants, type definitions, and initializers",
-  "main": "",
-  "types": "./index.d.ts",
+  "scripts": {
+    "build": "rollup -c rollup.config.js --environment TARGET:@open.mp/node",
+    "publish": "npm publish --access public"
+  },
+  "keywords": [
+    "omp",
+    "open.mp",
+    "samp",
+    "sa:mp",
+    "sa-mp",
+    "node",
+    "nodejs",
+    "javascript",
+    "typescript"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/bundle.js",
+      "import": "./dist/bundle.mjs"
+    }
+  },
+  "main": "dist/bundle.js",
+  "module": "dist/bundle.mjs",
+  "types": "dist/bundle.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "type": "module",
+  "devDependencies": {
+    "@rollup/plugin-json": "^6.1.0",
+    "@types/node": "^18.19.39",
+    "typescript": "^5.4.5",
+    "rollup": "^4.17.2",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "rollup-plugin-node-externals": "^7.1.2",
+    "rollup-plugin-typescript-paths": "^1.5.0"
+  },
   "repository": "https://github.com/omp-node/node",
   "homepage": "https://github.com/omp-node/node",
   "author": "Amyr (iAmir) Ahmady",

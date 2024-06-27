@@ -1,14 +1,17 @@
+import { Player } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * Vehicle class
  */
-class Vehicle {
+export default class Vehicle {
   /**
    * @var ptr
    * @description Vehicle pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,11 +19,11 @@ class Vehicle {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @constructor
-   * @param {number} modelidOrId
+   * @param {number} modelid
    * @param {number} x
    * @param {number} y
    * @param {number} z
@@ -32,29 +35,41 @@ class Vehicle {
    * @throws Will throw an error if the vehicle creation fails
    */
   constructor(
-    modelidOrId,
-    x,
-    y,
-    z,
-    rotation,
-    color1,
-    color2,
-    respawnDelay,
-    addSiren
+    modelid: number,
+    x: number,
+    y: number,
+    z: number,
+    rotation: number,
+    color1: number,
+    color2: number,
+    respawnDelay: number,
+    addSiren: boolean
+  );
+
+  constructor(
+    model: number,
+    x?: any,
+    y?: number,
+    z?: number,
+    rotation?: number,
+    color1?: number,
+    color2?: number,
+    respawnDelay?: number,
+    addSiren?: boolean
   ) {
-    if (x === undefined && y === undefined) {
-      const result = __internal_omp.Vehicle.FromID(modelidOrId);
+    if (arguments.length < 2) {
+      const result = internal_omp.Vehicle.FromID(model);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve vehicle");
+        throw new Error("Failed to create vehicle");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = modelidOrId;
+      this.ptr = PTR(result.ret);
+      this.id = model;
       return;
     }
 
-    const result = __internal_omp.Vehicle.Create(
-      modelidOrId,
+    const result = internal_omp.Vehicle.Create(
+      model,
       x,
       y,
       z,
@@ -68,9 +83,9 @@ class Vehicle {
       throw new Error("Failed to create vehicle");
     }
 
-    this.#ptr = omp.PTR(result.ret);
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -79,18 +94,15 @@ class Vehicle {
    * @param {number} id
    * @throws Will throw an error if the vehicle retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): void {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
-      return true;
-    } else {
-      return false;
+      this.ptr = null;
+      this.id = null;
     }
   }
 
@@ -99,8 +111,8 @@ class Vehicle {
    * @description get vehicle pointer
    * @returns {number|null} vehicle pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -108,8 +120,8 @@ class Vehicle {
    * @description get vehicle id
    * @returns {number|null} vehicle id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -118,8 +130,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  static getMaxPassengerSeats(modelid) {
-    const result = __internal_omp.Vehicle.GetMaxPassengerSeats(modelid);
+  static getMaxPassengerSeats(modelid: number): number {
+    const result = internal_omp.Vehicle.GetMaxPassengerSeats(modelid);
     return result.ret;
   }
 
@@ -129,15 +141,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  isStreamedIn(player) {
-    if (!this.#ptr) {
+  isStreamedIn(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.IsStreamedIn(
-      this.#ptr,
-      player.getPtr()
-    );
+    const result = internal_omp.Vehicle.IsStreamedIn(this.ptr, player.getPtr());
     return result.ret;
   }
 
@@ -146,12 +155,12 @@ class Vehicle {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getPos() {
-    if (!this.#ptr) {
+  getPos(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetPos(this.#ptr);
+    const result = internal_omp.Vehicle.GetPos(this.ptr);
     return result;
   }
 
@@ -163,12 +172,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setPos(x, y, z) {
-    if (!this.#ptr) {
+  setPos(x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetPos(this.#ptr, x, y, z);
+    const result = internal_omp.Vehicle.SetPos(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -177,12 +186,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getZAngle() {
-    if (!this.#ptr) {
+  getZAngle(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetZAngle(this.#ptr);
+    const result = internal_omp.Vehicle.GetZAngle(this.ptr);
     return result.ret;
   }
 
@@ -191,12 +200,18 @@ class Vehicle {
    * @returns {{ret: boolean, w: number,x: number,y: number,z: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getRotationQuat() {
-    if (!this.#ptr) {
+  getRotationQuat(): {
+    ret: boolean;
+    w: number;
+    x: number;
+    y: number;
+    z: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetRotationQuat(this.#ptr);
+    const result = internal_omp.Vehicle.GetRotationQuat(this.ptr);
     return result;
   }
 
@@ -208,17 +223,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getDistanceFromPoint(x, y, z) {
-    if (!this.#ptr) {
+  getDistanceFromPoint(x: number, y: number, z: number): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetDistanceFromPoint(
-      this.#ptr,
-      x,
-      y,
-      z
-    );
+    const result = internal_omp.Vehicle.GetDistanceFromPoint(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -228,12 +238,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setZAngle(angle) {
-    if (!this.#ptr) {
+  setZAngle(angle: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetZAngle(this.#ptr, angle);
+    const result = internal_omp.Vehicle.SetZAngle(this.ptr, angle);
     return result.ret;
   }
 
@@ -245,13 +255,17 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setParamsForPlayer(player, objective, doors) {
-    if (!this.#ptr) {
+  setParamsForPlayer(
+    player: Player,
+    objective: number,
+    doors: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetParamsForPlayer(
-      this.#ptr,
+    const result = internal_omp.Vehicle.SetParamsForPlayer(
+      this.ptr,
       player.getPtr(),
       objective,
       doors
@@ -264,8 +278,8 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  static useManualEngineAndLights() {
-    const result = __internal_omp.Vehicle.UseManualEngineAndLights();
+  static useManualEngineAndLights(): boolean {
+    const result = internal_omp.Vehicle.UseManualEngineAndLights();
     return result.ret;
   }
 
@@ -281,13 +295,21 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setParamsEx(engine, lights, alarm, doors, bonnet, boot, objective) {
-    if (!this.#ptr) {
+  setParamsEx(
+    engine: number,
+    lights: number,
+    alarm: number,
+    doors: number,
+    bonnet: number,
+    boot: number,
+    objective: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetParamsEx(
-      this.#ptr,
+    const result = internal_omp.Vehicle.SetParamsEx(
+      this.ptr,
       engine,
       lights,
       alarm,
@@ -304,12 +326,21 @@ class Vehicle {
    * @returns {{ret: boolean, engine: number,lights: number,alarm: number,doors: number,bonnet: number,boot: number,objective: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getParamsEx() {
-    if (!this.#ptr) {
+  getParamsEx(): {
+    ret: boolean;
+    engine: number;
+    lights: number;
+    alarm: number;
+    doors: number;
+    bonnet: number;
+    boot: number;
+    objective: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetParamsEx(this.#ptr);
+    const result = internal_omp.Vehicle.GetParamsEx(this.ptr);
     return result;
   }
 
@@ -318,12 +349,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getParamsSirenState() {
-    if (!this.#ptr) {
+  getParamsSirenState(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetParamsSirenState(this.#ptr);
+    const result = internal_omp.Vehicle.GetParamsSirenState(this.ptr);
     return result.ret;
   }
 
@@ -336,13 +367,18 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setParamsCarDoors(frontLeft, frontRight, rearLeft, rearRight) {
-    if (!this.#ptr) {
+  setParamsCarDoors(
+    frontLeft: number,
+    frontRight: number,
+    rearLeft: number,
+    rearRight: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetParamsCarDoors(
-      this.#ptr,
+    const result = internal_omp.Vehicle.SetParamsCarDoors(
+      this.ptr,
       frontLeft,
       frontRight,
       rearLeft,
@@ -356,12 +392,18 @@ class Vehicle {
    * @returns {{ret: boolean, frontLeft: number,frontRight: number,rearLeft: number,rearRight: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getParamsCarDoors() {
-    if (!this.#ptr) {
+  getParamsCarDoors(): {
+    ret: boolean;
+    frontLeft: number;
+    frontRight: number;
+    rearLeft: number;
+    rearRight: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetParamsCarDoors(this.#ptr);
+    const result = internal_omp.Vehicle.GetParamsCarDoors(this.ptr);
     return result;
   }
 
@@ -374,13 +416,18 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setParamsCarWindows(frontLeft, frontRight, rearLeft, rearRight) {
-    if (!this.#ptr) {
+  setParamsCarWindows(
+    frontLeft: number,
+    frontRight: number,
+    rearLeft: number,
+    rearRight: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetParamsCarWindows(
-      this.#ptr,
+    const result = internal_omp.Vehicle.SetParamsCarWindows(
+      this.ptr,
       frontLeft,
       frontRight,
       rearLeft,
@@ -394,12 +441,18 @@ class Vehicle {
    * @returns {{ret: boolean, frontLeft: number,frontRight: number,rearLeft: number,rearRight: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getParamsCarWindows() {
-    if (!this.#ptr) {
+  getParamsCarWindows(): {
+    ret: boolean;
+    frontLeft: number;
+    frontRight: number;
+    rearLeft: number;
+    rearRight: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetParamsCarWindows(this.#ptr);
+    const result = internal_omp.Vehicle.GetParamsCarWindows(this.ptr);
     return result;
   }
 
@@ -408,12 +461,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setToRespawn() {
-    if (!this.#ptr) {
+  setToRespawn(): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetToRespawn(this.#ptr);
+    const result = internal_omp.Vehicle.SetToRespawn(this.ptr);
     return result.ret;
   }
 
@@ -423,12 +476,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  linkToInterior(interiorid) {
-    if (!this.#ptr) {
+  linkToInterior(interiorid: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.LinkToInterior(this.#ptr, interiorid);
+    const result = internal_omp.Vehicle.LinkToInterior(this.ptr, interiorid);
     return result.ret;
   }
 
@@ -438,12 +491,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  addComponent(componentid) {
-    if (!this.#ptr) {
+  addComponent(componentid: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.AddComponent(this.#ptr, componentid);
+    const result = internal_omp.Vehicle.AddComponent(this.ptr, componentid);
     return result.ret;
   }
 
@@ -453,15 +506,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  removeComponent(componentid) {
-    if (!this.#ptr) {
+  removeComponent(componentid: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.RemoveComponent(
-      this.#ptr,
-      componentid
-    );
+    const result = internal_omp.Vehicle.RemoveComponent(this.ptr, componentid);
     return result.ret;
   }
 
@@ -472,16 +522,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  changeColor(color1, color2) {
-    if (!this.#ptr) {
+  changeColor(color1: number, color2: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.ChangeColor(
-      this.#ptr,
-      color1,
-      color2
-    );
+    const result = internal_omp.Vehicle.ChangeColor(this.ptr, color1, color2);
     return result.ret;
   }
 
@@ -491,12 +537,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  changePaintjob(paintjobid) {
-    if (!this.#ptr) {
+  changePaintjob(paintjobid: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.ChangePaintjob(this.#ptr, paintjobid);
+    const result = internal_omp.Vehicle.ChangePaintjob(this.ptr, paintjobid);
     return result.ret;
   }
 
@@ -506,12 +552,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setHealth(health) {
-    if (!this.#ptr) {
+  setHealth(health: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetHealth(this.#ptr, health);
+    const result = internal_omp.Vehicle.SetHealth(this.ptr, health);
     return result.ret;
   }
 
@@ -520,12 +566,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getHealth() {
-    if (!this.#ptr) {
+  getHealth(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetHealth(this.#ptr);
+    const result = internal_omp.Vehicle.GetHealth(this.ptr);
     return result.ret;
   }
 
@@ -535,13 +581,13 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  attachTrailer(trailer) {
-    if (!this.#ptr) {
+  attachTrailer(trailer: Vehicle): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.AttachTrailer(
-      this.#ptr,
+    const result = internal_omp.Vehicle.AttachTrailer(
+      this.ptr,
       trailer.getPtr()
     );
     return result.ret;
@@ -552,12 +598,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  detachTrailer() {
-    if (!this.#ptr) {
+  detachTrailer(): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.DetachTrailer(this.#ptr);
+    const result = internal_omp.Vehicle.DetachTrailer(this.ptr);
     return result.ret;
   }
 
@@ -566,12 +612,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  isTrailerAttached() {
-    if (!this.#ptr) {
+  isTrailerAttached(): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.IsTrailerAttached(this.#ptr);
+    const result = internal_omp.Vehicle.IsTrailerAttached(this.ptr);
     return result.ret;
   }
 
@@ -580,12 +626,12 @@ class Vehicle {
    * @returns {Vehicle}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getTrailer() {
-    if (!this.#ptr) {
+  getTrailer(): Vehicle {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetTrailer(this.#ptr);
+    const result = internal_omp.Vehicle.GetTrailer(this.ptr);
     return result.ret;
   }
 
@@ -595,15 +641,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setNumberPlate(numberPlate) {
-    if (!this.#ptr) {
+  setNumberPlate(numberPlate: string): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetNumberPlate(
-      this.#ptr,
-      numberPlate
-    );
+    const result = internal_omp.Vehicle.SetNumberPlate(this.ptr, numberPlate);
     return result.ret;
   }
 
@@ -612,12 +655,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getModel() {
-    if (!this.#ptr) {
+  getModel(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetModel(this.#ptr);
+    const result = internal_omp.Vehicle.GetModel(this.ptr);
     return result.ret;
   }
 
@@ -627,12 +670,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getComponentInSlot(slot) {
-    if (!this.#ptr) {
+  getComponentInSlot(slot: number): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetComponentInSlot(this.#ptr, slot);
+    const result = internal_omp.Vehicle.GetComponentInSlot(this.ptr, slot);
     return result.ret;
   }
 
@@ -642,8 +685,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  static getComponentType(componentid) {
-    const result = __internal_omp.Vehicle.GetComponentType(componentid);
+  static getComponentType(componentid: number): number {
+    const result = internal_omp.Vehicle.GetComponentType(componentid);
     return result.ret;
   }
 
@@ -654,11 +697,8 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  static canHaveComponent(modelid, componentid) {
-    const result = __internal_omp.Vehicle.CanHaveComponent(
-      modelid,
-      componentid
-    );
+  static canHaveComponent(modelid: number, componentid: number): boolean {
+    const result = internal_omp.Vehicle.CanHaveComponent(modelid, componentid);
     return result.ret;
   }
 
@@ -668,8 +708,14 @@ class Vehicle {
    * @returns {{ret: boolean, color1: number,color2: number,color3: number,color4: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  static getRandomColorPair(modelid) {
-    const result = __internal_omp.Vehicle.GetRandomColorPair(modelid);
+  static getRandomColorPair(modelid: number): {
+    ret: boolean;
+    color1: number;
+    color2: number;
+    color3: number;
+    color4: number;
+  } {
+    const result = internal_omp.Vehicle.GetRandomColorPair(modelid);
     return result;
   }
 
@@ -680,8 +726,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  static colorIndexToColor(colorIndex, alpha) {
-    const result = __internal_omp.Vehicle.ColorIndexToColor(colorIndex, alpha);
+  static colorIndexToColor(colorIndex: number, alpha: number): number {
+    const result = internal_omp.Vehicle.ColorIndexToColor(colorIndex, alpha);
     return result.ret;
   }
 
@@ -690,12 +736,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  repair() {
-    if (!this.#ptr) {
+  repair(): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.Repair(this.#ptr);
+    const result = internal_omp.Vehicle.Repair(this.ptr);
     return result.ret;
   }
 
@@ -704,12 +750,12 @@ class Vehicle {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getVelocity() {
-    if (!this.#ptr) {
+  getVelocity(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetVelocity(this.#ptr);
+    const result = internal_omp.Vehicle.GetVelocity(this.ptr);
     return result;
   }
 
@@ -721,12 +767,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setVelocity(x, y, z) {
-    if (!this.#ptr) {
+  setVelocity(x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetVelocity(this.#ptr, x, y, z);
+    const result = internal_omp.Vehicle.SetVelocity(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -738,17 +784,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setAngularVelocity(x, y, z) {
-    if (!this.#ptr) {
+  setAngularVelocity(x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetAngularVelocity(
-      this.#ptr,
-      x,
-      y,
-      z
-    );
+    const result = internal_omp.Vehicle.SetAngularVelocity(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -757,12 +798,18 @@ class Vehicle {
    * @returns {{ret: boolean, panels: number,doors: number,lights: number,tires: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getDamageStatus() {
-    if (!this.#ptr) {
+  getDamageStatus(): {
+    ret: boolean;
+    panels: number;
+    doors: number;
+    lights: number;
+    tires: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetDamageStatus(this.#ptr);
+    const result = internal_omp.Vehicle.GetDamageStatus(this.ptr);
     return result;
   }
 
@@ -775,13 +822,18 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  updateDamageStatus(panels, doors, lights, tires) {
-    if (!this.#ptr) {
+  updateDamageStatus(
+    panels: number,
+    doors: number,
+    lights: number,
+    tires: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.UpdateDamageStatus(
-      this.#ptr,
+    const result = internal_omp.Vehicle.UpdateDamageStatus(
+      this.ptr,
       panels,
       doors,
       lights,
@@ -797,8 +849,16 @@ class Vehicle {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  static getModelInfo(vehiclemodel, infotype) {
-    const result = __internal_omp.Vehicle.GetModelInfo(vehiclemodel, infotype);
+  static getModelInfo(
+    vehiclemodel: number,
+    infotype: number
+  ): {
+    ret: boolean;
+    x: number;
+    y: number;
+    z: number;
+  } {
+    const result = internal_omp.Vehicle.GetModelInfo(vehiclemodel, infotype);
     return result;
   }
 
@@ -808,15 +868,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setVirtualWorld(virtualWorld) {
-    if (!this.#ptr) {
+  setVirtualWorld(virtualWorld: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetVirtualWorld(
-      this.#ptr,
-      virtualWorld
-    );
+    const result = internal_omp.Vehicle.SetVirtualWorld(this.ptr, virtualWorld);
     return result.ret;
   }
 
@@ -825,12 +882,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getVirtualWorld() {
-    if (!this.#ptr) {
+  getVirtualWorld(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetVirtualWorld(this.#ptr);
+    const result = internal_omp.Vehicle.GetVirtualWorld(this.ptr);
     return result.ret;
   }
 
@@ -839,12 +896,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getLandingGearState() {
-    if (!this.#ptr) {
+  getLandingGearState(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetLandingGearState(this.#ptr);
+    const result = internal_omp.Vehicle.GetLandingGearState(this.ptr);
     return result.ret;
   }
 
@@ -853,12 +910,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  isValid() {
-    if (!this.#ptr) {
+  isValid(): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.IsValid(this.#ptr);
+    const result = internal_omp.Vehicle.IsValid(this.ptr);
     return result.ret;
   }
 
@@ -874,13 +931,21 @@ class Vehicle {
    * @returns {{ret: boolean, id: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  addStatic(modelid, x, y, z, angle, color1, color2) {
-    if (!this.#ptr) {
+  addStatic(
+    modelid: number,
+    x: number,
+    y: number,
+    z: number,
+    angle: number,
+    color1: number,
+    color2: number
+  ): { ret: boolean; id: number } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.AddStatic(
-      this.#ptr,
+    const result = internal_omp.Vehicle.AddStatic(
+      this.ptr,
       modelid,
       x,
       y,
@@ -906,13 +971,23 @@ class Vehicle {
    * @returns {{ret: boolean, id: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  addStaticEx(modelid, x, y, z, angle, color1, color2, respawnDelay, addSiren) {
-    if (!this.#ptr) {
+  addStaticEx(
+    modelid: number,
+    x: number,
+    y: number,
+    z: number,
+    angle: number,
+    color1: number,
+    color2: number,
+    respawnDelay: number,
+    addSiren: boolean
+  ): { ret: boolean; id: number } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.AddStaticEx(
-      this.#ptr,
+    const result = internal_omp.Vehicle.AddStaticEx(
+      this.ptr,
       modelid,
       x,
       y,
@@ -931,8 +1006,8 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  static enableFriendlyFire() {
-    const result = __internal_omp.Vehicle.EnableFriendlyFire();
+  static enableFriendlyFire(): boolean {
+    const result = internal_omp.Vehicle.EnableFriendlyFire();
     return result.ret;
   }
 
@@ -941,12 +1016,20 @@ class Vehicle {
    * @returns {{ret: boolean, x: number,y: number,z: number,rotation: number,color1: number,color2: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getSpawnInfo() {
-    if (!this.#ptr) {
+  getSpawnInfo(): {
+    ret: boolean;
+    x: number;
+    y: number;
+    z: number;
+    rotation: number;
+    color1: number;
+    color2: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetSpawnInfo(this.#ptr);
+    const result = internal_omp.Vehicle.GetSpawnInfo(this.ptr);
     return result;
   }
 
@@ -965,22 +1048,22 @@ class Vehicle {
    * @throws Will throw an error if the vehicle is invalid
    */
   setSpawnInfo(
-    modelid,
-    x,
-    y,
-    z,
-    rotation,
-    color1,
-    color2,
-    respawn_time,
-    interior
-  ) {
-    if (!this.#ptr) {
+    modelid: number,
+    x: number,
+    y: number,
+    z: number,
+    rotation: number,
+    color1: number,
+    color2: number,
+    respawn_time: number,
+    interior: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetSpawnInfo(
-      this.#ptr,
+    const result = internal_omp.Vehicle.SetSpawnInfo(
+      this.ptr,
       modelid,
       x,
       y,
@@ -1000,8 +1083,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  static getModelCount(modelid) {
-    const result = __internal_omp.Vehicle.GetModelCount(modelid);
+  static getModelCount(modelid: number): number {
+    const result = internal_omp.Vehicle.GetModelCount(modelid);
     return result.ret;
   }
 
@@ -1010,8 +1093,8 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  static getModelsUsed() {
-    const result = __internal_omp.Vehicle.GetModelsUsed();
+  static getModelsUsed(): number {
+    const result = internal_omp.Vehicle.GetModelsUsed();
     return result.ret;
   }
 
@@ -1020,12 +1103,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getPaintjob() {
-    if (!this.#ptr) {
+  getPaintjob(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetPaintjob(this.#ptr);
+    const result = internal_omp.Vehicle.GetPaintjob(this.ptr);
     return result.ret;
   }
 
@@ -1034,12 +1117,12 @@ class Vehicle {
    * @returns {{ret: boolean, color1: number,color2: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getColor() {
-    if (!this.#ptr) {
+  getColor(): { ret: boolean; color1: number; color2: number } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetColor(this.#ptr);
+    const result = internal_omp.Vehicle.GetColor(this.ptr);
     return result;
   }
 
@@ -1048,12 +1131,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getInterior() {
-    if (!this.#ptr) {
+  getInterior(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetInterior(this.#ptr);
+    const result = internal_omp.Vehicle.GetInterior(this.ptr);
     return result.ret;
   }
 
@@ -1062,12 +1145,12 @@ class Vehicle {
    * @returns {{ret: boolean, numberPlate: string}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getNumberPlate() {
-    if (!this.#ptr) {
+  getNumberPlate(): { ret: boolean; numberPlate: string } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetNumberPlate(this.#ptr);
+    const result = internal_omp.Vehicle.GetNumberPlate(this.ptr);
     return result;
   }
 
@@ -1077,13 +1160,13 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setRespawnDelay(respawn_delay) {
-    if (!this.#ptr) {
+  setRespawnDelay(respawn_delay: number): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetRespawnDelay(
-      this.#ptr,
+    const result = internal_omp.Vehicle.SetRespawnDelay(
+      this.ptr,
       respawn_delay
     );
     return result.ret;
@@ -1094,12 +1177,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getRespawnDelay() {
-    if (!this.#ptr) {
+  getRespawnDelay(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetRespawnDelay(this.#ptr);
+    const result = internal_omp.Vehicle.GetRespawnDelay(this.ptr);
     return result.ret;
   }
 
@@ -1108,12 +1191,12 @@ class Vehicle {
    * @returns {Vehicle}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getCab() {
-    if (!this.#ptr) {
+  getCab(): Vehicle {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetCab(this.#ptr);
+    const result = internal_omp.Vehicle.GetCab(this.ptr);
     return result.ret;
   }
 
@@ -1122,12 +1205,12 @@ class Vehicle {
    * @returns {Vehicle}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getTower() {
-    if (!this.#ptr) {
+  getTower(): Vehicle {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetTower(this.#ptr);
+    const result = internal_omp.Vehicle.GetTower(this.ptr);
     return result.ret;
   }
 
@@ -1136,12 +1219,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getOccupiedTick() {
-    if (!this.#ptr) {
+  getOccupiedTick(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetOccupiedTick(this.#ptr);
+    const result = internal_omp.Vehicle.GetOccupiedTick(this.ptr);
     return result.ret;
   }
 
@@ -1150,12 +1233,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getRespawnTick() {
-    if (!this.#ptr) {
+  getRespawnTick(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetRespawnTick(this.#ptr);
+    const result = internal_omp.Vehicle.GetRespawnTick(this.ptr);
     return result.ret;
   }
 
@@ -1164,12 +1247,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  hasBeenOccupied() {
-    if (!this.#ptr) {
+  hasBeenOccupied(): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.HasBeenOccupied(this.#ptr);
+    const result = internal_omp.Vehicle.HasBeenOccupied(this.ptr);
     return result.ret;
   }
 
@@ -1178,12 +1261,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  isOccupied() {
-    if (!this.#ptr) {
+  isOccupied(): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.IsOccupied(this.#ptr);
+    const result = internal_omp.Vehicle.IsOccupied(this.ptr);
     return result.ret;
   }
 
@@ -1192,12 +1275,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  isDead() {
-    if (!this.#ptr) {
+  isDead(): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.IsDead(this.#ptr);
+    const result = internal_omp.Vehicle.IsDead(this.ptr);
     return result.ret;
   }
 
@@ -1207,13 +1290,13 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  setParamsSirenState(siren_state) {
-    if (!this.#ptr) {
+  setParamsSirenState(siren_state: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.SetParamsSirenState(
-      this.#ptr,
+    const result = internal_omp.Vehicle.SetParamsSirenState(
+      this.ptr,
       siren_state
     );
     return result.ret;
@@ -1225,12 +1308,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  toggleSirenEnabled(status) {
-    if (!this.#ptr) {
+  toggleSirenEnabled(status: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.ToggleSirenEnabled(this.#ptr, status);
+    const result = internal_omp.Vehicle.ToggleSirenEnabled(this.ptr, status);
     return result.ret;
   }
 
@@ -1239,12 +1322,12 @@ class Vehicle {
    * @returns {boolean}
    * @throws Will throw an error if the vehicle is invalid
    */
-  isSirenEnabled() {
-    if (!this.#ptr) {
+  isSirenEnabled(): boolean {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.IsSirenEnabled(this.#ptr);
+    const result = internal_omp.Vehicle.IsSirenEnabled(this.ptr);
     return result.ret;
   }
 
@@ -1253,12 +1336,12 @@ class Vehicle {
    * @returns {Player}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getLastDriver() {
-    if (!this.#ptr) {
+  getLastDriver(): Player {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetLastDriver(this.#ptr);
+    const result = internal_omp.Vehicle.GetLastDriver(this.ptr);
     return result.ret;
   }
 
@@ -1267,12 +1350,12 @@ class Vehicle {
    * @returns {Player}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getDriver() {
-    if (!this.#ptr) {
+  getDriver(): Player {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetDriver(this.#ptr);
+    const result = internal_omp.Vehicle.GetDriver(this.ptr);
     return result.ret;
   }
 
@@ -1281,12 +1364,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getSirenState() {
-    if (!this.#ptr) {
+  getSirenState(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetSirenState(this.#ptr);
+    const result = internal_omp.Vehicle.GetSirenState(this.ptr);
     return result.ret;
   }
 
@@ -1295,12 +1378,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getHydraReactorAngle() {
-    if (!this.#ptr) {
+  getHydraReactorAngle(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetHydraReactorAngle(this.#ptr);
+    const result = internal_omp.Vehicle.GetHydraReactorAngle(this.ptr);
     return result.ret;
   }
 
@@ -1309,12 +1392,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getTrainSpeed() {
-    if (!this.#ptr) {
+  getTrainSpeed(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetTrainSpeed(this.#ptr);
+    const result = internal_omp.Vehicle.GetTrainSpeed(this.ptr);
     return result.ret;
   }
 
@@ -1323,12 +1406,23 @@ class Vehicle {
    * @returns {{ret: boolean, rightX: number,rightY: number,rightZ: number,upX: number,upY: number,upZ: number,atX: number,atY: number,atZ: number}} return object
    * @throws Will throw an error if the vehicle is invalid
    */
-  getMatrix() {
-    if (!this.#ptr) {
+  getMatrix(): {
+    ret: boolean;
+    rightX: number;
+    rightY: number;
+    rightZ: number;
+    upX: number;
+    upY: number;
+    upZ: number;
+    atX: number;
+    atY: number;
+    atZ: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetMatrix(this.#ptr);
+    const result = internal_omp.Vehicle.GetMatrix(this.ptr);
     return result;
   }
 
@@ -1338,12 +1432,12 @@ class Vehicle {
    * @returns {Player}
    * @throws Will throw an error if the vehicle is invalid
    */
-  getOccupant(seat) {
-    if (!this.#ptr) {
+  getOccupant(seat: number): Player {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.GetOccupant(this.#ptr, seat);
+    const result = internal_omp.Vehicle.GetOccupant(this.ptr, seat);
     return result.ret;
   }
 
@@ -1352,14 +1446,12 @@ class Vehicle {
    * @returns {number}
    * @throws Will throw an error if the vehicle is invalid
    */
-  countOccupants() {
-    if (!this.#ptr) {
+  countOccupants(): number {
+    if (!this.ptr) {
       throw new Error("Vehicle instance is not valid");
     }
 
-    const result = __internal_omp.Vehicle.CountOccupants(this.#ptr);
+    const result = internal_omp.Vehicle.CountOccupants(this.ptr);
     return result.ret;
   }
 }
-
-export default Vehicle;

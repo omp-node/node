@@ -1,26 +1,23 @@
+import { Player } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * Menu class
  */
-class Menu {
+export default class Menu {
   /**
-   * @var ptr
-   * @description Menu pointer
-   * @type {number|null}
-   * @private
+   * @private @var {number|null} Menu pointer
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
-   * @var id
-   * @description Menu ID
-   * @type {number|null}
-   * @private
+   * @private @var {number|null} Menu ID
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @constructor
-   * @param {string} titleOrId
+   * @param {string} title
    * @param {number} columns
    * @param {number} x
    * @param {number} y
@@ -28,20 +25,36 @@ class Menu {
    * @param {number} column2Width
    * @throws Will throw an error if the menu creation fails
    */
-  constructor(titleOrId, columns, x, y, column1Width, column2Width) {
-    if (columns === undefined && x === undefined) {
-      const result = __internal_omp.Menu.FromID(titleOrId);
+  constructor(
+    title: string,
+    columns: number,
+    x: number,
+    y: number,
+    column1Width: number,
+    column2Width: number
+  );
+
+  constructor(
+    title: string | number,
+    columns?: number,
+    x?: number,
+    y?: number,
+    column1Width?: number,
+    column2Width?: number
+  ) {
+    if (arguments.length < 2 && typeof title === "number") {
+      const result = internal_omp.Menu.FromID(title);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve menu");
+        throw new Error("Failed to create menu");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = titleOrId;
+      this.ptr = PTR(result.ret);
+      this.id = title;
       return;
     }
 
-    const result = __internal_omp.Menu.Create(
-      titleOrId,
+    const result = internal_omp.Menu.Create(
+      title,
       columns,
       x,
       y,
@@ -52,9 +65,9 @@ class Menu {
       throw new Error("Failed to create menu");
     }
 
-    this.#ptr = omp.PTR(result.ret);
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -63,18 +76,18 @@ class Menu {
    * @param {number} id
    * @throws Will throw an error if the menu retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): void {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
-      return true;
+      this.ptr = null;
+      this.id = null;
+      return;
     } else {
-      return false;
+      return;
     }
   }
 
@@ -83,8 +96,8 @@ class Menu {
    * @description get menu pointer
    * @returns {number|null} menu pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -92,8 +105,8 @@ class Menu {
    * @description get menu id
    * @returns {number|null} menu id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -103,12 +116,12 @@ class Menu {
    * @returns {number}
    * @throws Will throw an error if the menu is invalid
    */
-  addItem(column, text) {
-    if (!this.#ptr) {
+  addItem(column: number, text: string): number {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.AddItem(this.#ptr, column, text);
+    const result = internal_omp.Menu.AddItem(this.ptr, column, text);
     return result.ret;
   }
 
@@ -119,13 +132,13 @@ class Menu {
    * @returns {boolean}
    * @throws Will throw an error if the menu is invalid
    */
-  setColumnHeader(column, headerTitle) {
-    if (!this.#ptr) {
+  setColumnHeader(column: number, headerTitle: string): boolean {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.SetColumnHeader(
-      this.#ptr,
+    const result = internal_omp.Menu.SetColumnHeader(
+      this.ptr,
       column,
       headerTitle
     );
@@ -138,15 +151,12 @@ class Menu {
    * @returns {boolean}
    * @throws Will throw an error if the menu is invalid
    */
-  showForPlayer(player) {
-    if (!this.#ptr) {
+  showForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.ShowForPlayer(
-      this.#ptr,
-      player.getPtr()
-    );
+    const result = internal_omp.Menu.ShowForPlayer(this.ptr, player.getPtr());
     return result.ret;
   }
 
@@ -156,15 +166,12 @@ class Menu {
    * @returns {boolean}
    * @throws Will throw an error if the menu is invalid
    */
-  hideForPlayer(player) {
-    if (!this.#ptr) {
+  hideForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.HideForPlayer(
-      this.#ptr,
-      player.getPtr()
-    );
+    const result = internal_omp.Menu.HideForPlayer(this.ptr, player.getPtr());
     return result.ret;
   }
 
@@ -173,12 +180,12 @@ class Menu {
    * @returns {boolean}
    * @throws Will throw an error if the menu is invalid
    */
-  disable() {
-    if (!this.#ptr) {
+  disable(): boolean {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.Disable(this.#ptr);
+    const result = internal_omp.Menu.Disable(this.ptr);
     return result.ret;
   }
 
@@ -188,12 +195,12 @@ class Menu {
    * @returns {boolean}
    * @throws Will throw an error if the menu is invalid
    */
-  disableRow(row) {
-    if (!this.#ptr) {
+  disableRow(row: number): boolean {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.DisableRow(this.#ptr, row);
+    const result = internal_omp.Menu.DisableRow(this.ptr, row);
     return result.ret;
   }
 
@@ -202,12 +209,12 @@ class Menu {
    * @returns {boolean}
    * @throws Will throw an error if the menu is invalid
    */
-  isValid() {
-    if (!this.#ptr) {
+  isValid(): boolean {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.IsValid(this.#ptr);
+    const result = internal_omp.Menu.IsValid(this.ptr);
     return result.ret;
   }
 
@@ -216,12 +223,12 @@ class Menu {
    * @returns {boolean}
    * @throws Will throw an error if the menu is invalid
    */
-  isDisabled() {
-    if (!this.#ptr) {
+  isDisabled(): boolean {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.IsDisabled(this.#ptr);
+    const result = internal_omp.Menu.IsDisabled(this.ptr);
     return result.ret;
   }
 
@@ -231,12 +238,12 @@ class Menu {
    * @returns {boolean}
    * @throws Will throw an error if the menu is invalid
    */
-  isRowDisabled(row) {
-    if (!this.#ptr) {
+  isRowDisabled(row: number): boolean {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.IsRowDisabled(this.#ptr, row);
+    const result = internal_omp.Menu.IsRowDisabled(this.ptr, row);
     return result.ret;
   }
 
@@ -245,12 +252,12 @@ class Menu {
    * @returns {number}
    * @throws Will throw an error if the menu is invalid
    */
-  getColumns() {
-    if (!this.#ptr) {
+  getColumns(): number {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.GetColumns(this.#ptr);
+    const result = internal_omp.Menu.GetColumns(this.ptr);
     return result.ret;
   }
 
@@ -260,12 +267,12 @@ class Menu {
    * @returns {number}
    * @throws Will throw an error if the menu is invalid
    */
-  getItems(column) {
-    if (!this.#ptr) {
+  getItems(column: number): number {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.GetItems(this.#ptr, column);
+    const result = internal_omp.Menu.GetItems(this.ptr, column);
     return result.ret;
   }
 
@@ -274,12 +281,12 @@ class Menu {
    * @returns {{ret: boolean, x: number,y: number}} return object
    * @throws Will throw an error if the menu is invalid
    */
-  getPos() {
-    if (!this.#ptr) {
+  getPos(): { ret: boolean; x: number; y: number } {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.GetPos(this.#ptr);
+    const result = internal_omp.Menu.GetPos(this.ptr);
     return result;
   }
 
@@ -288,12 +295,16 @@ class Menu {
    * @returns {{ret: boolean, column1Width: number,column2Width: number}} return object
    * @throws Will throw an error if the menu is invalid
    */
-  getColumnWidth() {
-    if (!this.#ptr) {
+  getColumnWidth(): {
+    ret: boolean;
+    column1Width: number;
+    column2Width: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.GetColumnWidth(this.#ptr);
+    const result = internal_omp.Menu.GetColumnWidth(this.ptr);
     return result;
   }
 
@@ -303,12 +314,12 @@ class Menu {
    * @returns {{ret: boolean, header: string}} return object
    * @throws Will throw an error if the menu is invalid
    */
-  getColumnHeader(column) {
-    if (!this.#ptr) {
+  getColumnHeader(column: number): { ret: boolean; header: string } {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.GetColumnHeader(this.#ptr, column);
+    const result = internal_omp.Menu.GetColumnHeader(this.ptr, column);
     return result;
   }
 
@@ -319,14 +330,12 @@ class Menu {
    * @returns {{ret: boolean, item: string}} return object
    * @throws Will throw an error if the menu is invalid
    */
-  getItem(column, row) {
-    if (!this.#ptr) {
+  getItem(column: number, row: number): { ret: boolean; item: string } {
+    if (!this.ptr) {
       throw new Error("Menu instance is not valid");
     }
 
-    const result = __internal_omp.Menu.GetItem(this.#ptr, column, row);
+    const result = internal_omp.Menu.GetItem(this.ptr, column, row);
     return result;
   }
 }
-
-export default Menu;

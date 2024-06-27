@@ -1,14 +1,17 @@
+import { Player } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * GangZone class
  */
-class GangZone {
+export default class GangZone {
   /**
    * @var ptr
    * @description GangZone pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,36 +19,38 @@ class GangZone {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @constructor
-   * @param {number} minxOrId
+   * @param {number} minx
    * @param {number} miny
    * @param {number} maxx
    * @param {number} maxy
    * @throws Will throw an error if the gangZone creation fails
    */
-  constructor(minxOrId, miny, maxx, maxy) {
-    if (miny === undefined && maxx === undefined) {
-      const result = __internal_omp.GangZone.FromID(minxOrId);
+  constructor(minx: number, miny: number, maxx: number, maxy: number);
+
+  constructor(minx: number, miny?: number, maxx?: number, maxy?: number) {
+    if (arguments.length < 2) {
+      const result = internal_omp.GangZone.FromID(minx);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve gangzone");
+        throw new Error("Failed to create gangzone");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = minxOrId;
+      this.ptr = PTR(result.ret);
+      this.id = minx;
       return;
     }
 
-    const result = __internal_omp.GangZone.Create(minxOrId, miny, maxx, maxy);
+    const result = internal_omp.GangZone.Create(minx, miny, maxx, maxy);
     if (result.ret === 0) {
       throw new Error("Failed to create gangZone");
     }
 
-    this.#ptr = omp.PTR(result.ret);
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -54,15 +59,15 @@ class GangZone {
    * @param {number} id
    * @throws Will throw an error if the gangZone retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
+      this.ptr = null;
+      this.id = null;
       return true;
     } else {
       return false;
@@ -74,8 +79,8 @@ class GangZone {
    * @description get gangZone pointer
    * @returns {number|null} gangZone pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -83,8 +88,8 @@ class GangZone {
    * @description get gangZone id
    * @returns {number|null} gangZone id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -94,14 +99,14 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  showForPlayer(player, color) {
-    if (!this.#ptr) {
+  showForPlayer(player: Player, color: number): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.ShowForPlayer(
+    const result = internal_omp.GangZone.ShowForPlayer(
       player.getPtr(),
-      this.#ptr,
+      this.ptr,
       color
     );
     return result.ret;
@@ -113,12 +118,12 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  showForAll(color) {
-    if (!this.#ptr) {
+  showForAll(color: number): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.ShowForAll(this.#ptr, color);
+    const result = internal_omp.GangZone.ShowForAll(this.ptr, color);
     return result.ret;
   }
 
@@ -128,14 +133,14 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  hideForPlayer(player) {
-    if (!this.#ptr) {
+  hideForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.HideForPlayer(
+    const result = internal_omp.GangZone.HideForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
@@ -145,12 +150,12 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  hideForAll() {
-    if (!this.#ptr) {
+  hideForAll(): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.HideForAll(this.#ptr);
+    const result = internal_omp.GangZone.HideForAll(this.ptr);
     return result.ret;
   }
 
@@ -161,14 +166,14 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  flashForPlayer(player, color) {
-    if (!this.#ptr) {
+  flashForPlayer(player: Player, color: number): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.FlashForPlayer(
+    const result = internal_omp.GangZone.FlashForPlayer(
       player.getPtr(),
-      this.#ptr,
+      this.ptr,
       color
     );
     return result.ret;
@@ -180,12 +185,12 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  flashForAll(color) {
-    if (!this.#ptr) {
+  flashForAll(color: number): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.FlashForAll(this.#ptr, color);
+    const result = internal_omp.GangZone.FlashForAll(this.ptr, color);
     return result.ret;
   }
 
@@ -195,14 +200,14 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  stopFlashForPlayer(player) {
-    if (!this.#ptr) {
+  stopFlashForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.StopFlashForPlayer(
+    const result = internal_omp.GangZone.StopFlashForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
@@ -212,12 +217,12 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  stopFlashForAll() {
-    if (!this.#ptr) {
+  stopFlashForAll(): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.StopFlashForAll(this.#ptr);
+    const result = internal_omp.GangZone.StopFlashForAll(this.ptr);
     return result.ret;
   }
 
@@ -226,12 +231,12 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  isValid() {
-    if (!this.#ptr) {
+  isValid(): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.IsValid(this.#ptr);
+    const result = internal_omp.GangZone.IsValid(this.ptr);
     return result.ret;
   }
 
@@ -241,15 +246,12 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  isPlayerIn(player) {
-    if (!this.#ptr) {
+  isPlayerIn(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.IsPlayerIn(
-      player.getPtr(),
-      this.#ptr
-    );
+    const result = internal_omp.GangZone.IsPlayerIn(player.getPtr(), this.ptr);
     return result.ret;
   }
 
@@ -259,14 +261,14 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  isVisibleForPlayer(player) {
-    if (!this.#ptr) {
+  isVisibleForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.IsVisibleForPlayer(
+    const result = internal_omp.GangZone.IsVisibleForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
@@ -277,14 +279,14 @@ class GangZone {
    * @returns {number}
    * @throws Will throw an error if the gangZone is invalid
    */
-  getColorForPlayer(player) {
-    if (!this.#ptr) {
+  getColorForPlayer(player: Player): number {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.GetColorForPlayer(
+    const result = internal_omp.GangZone.GetColorForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
@@ -295,14 +297,14 @@ class GangZone {
    * @returns {number}
    * @throws Will throw an error if the gangZone is invalid
    */
-  getFlashColorForPlayer(player) {
-    if (!this.#ptr) {
+  getFlashColorForPlayer(player: Player): number {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.GetFlashColorForPlayer(
+    const result = internal_omp.GangZone.GetFlashColorForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
@@ -313,14 +315,14 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  isFlashingForPlayer(player) {
-    if (!this.#ptr) {
+  isFlashingForPlayer(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.IsFlashingForPlayer(
+    const result = internal_omp.GangZone.IsFlashingForPlayer(
       player.getPtr(),
-      this.#ptr
+      this.ptr
     );
     return result.ret;
   }
@@ -330,12 +332,18 @@ class GangZone {
    * @returns {{ret: boolean, minx: number,miny: number,maxx: number,maxy: number}} return object
    * @throws Will throw an error if the gangZone is invalid
    */
-  getPos() {
-    if (!this.#ptr) {
+  getPos(): {
+    ret: boolean;
+    minx: number;
+    miny: number;
+    maxx: number;
+    maxy: number;
+  } {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.GetPos(this.#ptr);
+    const result = internal_omp.GangZone.GetPos(this.ptr);
     return result;
   }
 
@@ -345,14 +353,12 @@ class GangZone {
    * @returns {boolean}
    * @throws Will throw an error if the gangZone is invalid
    */
-  useCheck(enable) {
-    if (!this.#ptr) {
+  useCheck(enable: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("GangZone instance is not valid");
     }
 
-    const result = __internal_omp.GangZone.UseCheck(this.#ptr, enable);
+    const result = internal_omp.GangZone.UseCheck(this.ptr, enable);
     return result.ret;
   }
 }
-
-export default GangZone;

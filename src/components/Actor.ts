@@ -1,14 +1,17 @@
+import { Player } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * Actor class
  */
-class Actor {
+export default class Actor {
   /**
    * @var ptr
    * @description Actor pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,54 +19,55 @@ class Actor {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @constructor
-   * @param {number} modelOrId
+   * @param {number} model
    * @param {number} x
    * @param {number} y
    * @param {number} z
    * @param {number} rot
    * @throws Will throw an error if the actor creation fails
    */
-  constructor(modelOrId, x, y, z, rot) {
-    if (x === undefined && y === undefined) {
-      const result = __internal_omp.Actor.FromID(modelOrId);
+  constructor(model: number, x: number, y: number, z: number, rot: number);
+
+  constructor(model: number, x?: number, y?: number, z?: number, rot?: number) {
+    if (arguments.length < 2) {
+      const result = internal_omp.Actor.FromID(model);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve actor");
+        throw new Error("Failed to create actor");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = modelOrId;
+      this.ptr = PTR(result.ret);
+      this.id = model;
       return;
     }
 
-    const result = __internal_omp.Actor.Create(modelOrId, x, y, z, rot);
+    const result = internal_omp.Actor.Create(model, x, y, z, rot!);
     if (result.ret === 0) {
       throw new Error("Failed to create actor");
     }
 
-    this.#ptr = omp.PTR(result.ret);
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
   /**
    * @method destroy
-   * @param {number} id
    * @throws Will throw an error if the actor retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
+      this.ptr = null;
+      this.id = null;
       return true;
     } else {
       return false;
@@ -75,8 +79,8 @@ class Actor {
    * @description get actor pointer
    * @returns {number|null} actor pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -84,8 +88,8 @@ class Actor {
    * @description get actor id
    * @returns {number|null} actor id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -94,13 +98,13 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  isStreamedInFor(player) {
-    if (!this.#ptr) {
+  isStreamedInFor(player: Player): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.IsStreamedInFor(
-      this.#ptr,
+    const result = internal_omp.Actor.IsStreamedInFor(
+      this.ptr,
       player.getPtr()
     );
     return result.ret;
@@ -112,12 +116,12 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  setVirtualWorld(vw) {
-    if (!this.#ptr) {
+  setVirtualWorld(vw: number): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.SetVirtualWorld(this.#ptr, vw);
+    const result = internal_omp.Actor.SetVirtualWorld(this.ptr, vw);
     return result.ret;
   }
 
@@ -126,12 +130,12 @@ class Actor {
    * @returns {number}
    * @throws Will throw an error if the actor is invalid
    */
-  getVirtualWorld() {
-    if (!this.#ptr) {
+  getVirtualWorld(): number {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.GetVirtualWorld(this.#ptr);
+    const result = internal_omp.Actor.GetVirtualWorld(this.ptr);
     return result.ret;
   }
 
@@ -148,13 +152,22 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  applyAnimation(name, library, delta, loop, lockX, lockY, freeze, time) {
-    if (!this.#ptr) {
+  applyAnimation(
+    name: string,
+    library: string,
+    delta: number,
+    loop: boolean,
+    lockX: boolean,
+    lockY: boolean,
+    freeze: boolean,
+    time: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.ApplyAnimation(
-      this.#ptr,
+    const result = internal_omp.Actor.ApplyAnimation(
+      this.ptr,
       name,
       library,
       delta,
@@ -172,12 +185,12 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  clearAnimations() {
-    if (!this.#ptr) {
+  clearAnimations(): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.ClearAnimations(this.#ptr);
+    const result = internal_omp.Actor.ClearAnimations(this.ptr);
     return result.ret;
   }
 
@@ -189,12 +202,12 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  setPos(x, y, z) {
-    if (!this.#ptr) {
+  setPos(x: number, y: number, z: number): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.SetPos(this.#ptr, x, y, z);
+    const result = internal_omp.Actor.SetPos(this.ptr, x, y, z);
     return result.ret;
   }
 
@@ -203,12 +216,12 @@ class Actor {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the actor is invalid
    */
-  getPos() {
-    if (!this.#ptr) {
+  getPos(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.GetPos(this.#ptr);
+    const result = internal_omp.Actor.GetPos(this.ptr);
     return result;
   }
 
@@ -218,12 +231,12 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  setFacingAngle(angle) {
-    if (!this.#ptr) {
+  setFacingAngle(angle: number): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.SetFacingAngle(this.#ptr, angle);
+    const result = internal_omp.Actor.SetFacingAngle(this.ptr, angle);
     return result.ret;
   }
 
@@ -232,12 +245,12 @@ class Actor {
    * @returns {number}
    * @throws Will throw an error if the actor is invalid
    */
-  getFacingAngle() {
-    if (!this.#ptr) {
+  getFacingAngle(): number {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.GetFacingAngle(this.#ptr);
+    const result = internal_omp.Actor.GetFacingAngle(this.ptr);
     return result.ret;
   }
 
@@ -247,12 +260,12 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  setHealth(hp) {
-    if (!this.#ptr) {
+  setHealth(hp: number): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.SetHealth(this.#ptr, hp);
+    const result = internal_omp.Actor.SetHealth(this.ptr, hp);
     return result.ret;
   }
 
@@ -261,12 +274,12 @@ class Actor {
    * @returns {number}
    * @throws Will throw an error if the actor is invalid
    */
-  getHealth() {
-    if (!this.#ptr) {
+  getHealth(): number {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.GetHealth(this.#ptr);
+    const result = internal_omp.Actor.GetHealth(this.ptr);
     return result.ret;
   }
 
@@ -276,12 +289,12 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  setInvulnerable(toggle) {
-    if (!this.#ptr) {
+  setInvulnerable(toggle: boolean): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.SetInvulnerable(this.#ptr, toggle);
+    const result = internal_omp.Actor.SetInvulnerable(this.ptr, toggle);
     return result.ret;
   }
 
@@ -290,12 +303,12 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  isInvulnerable() {
-    if (!this.#ptr) {
+  isInvulnerable(): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.IsInvulnerable(this.#ptr);
+    const result = internal_omp.Actor.IsInvulnerable(this.ptr);
     return result.ret;
   }
 
@@ -304,12 +317,12 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  isValid() {
-    if (!this.#ptr) {
+  isValid(): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.IsValid(this.#ptr);
+    const result = internal_omp.Actor.IsValid(this.ptr);
     return result.ret;
   }
 
@@ -319,12 +332,12 @@ class Actor {
    * @returns {boolean}
    * @throws Will throw an error if the actor is invalid
    */
-  setSkin(skin) {
-    if (!this.#ptr) {
+  setSkin(skin: number): boolean {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.SetSkin(this.#ptr, skin);
+    const result = internal_omp.Actor.SetSkin(this.ptr, skin);
     return result.ret;
   }
 
@@ -333,12 +346,12 @@ class Actor {
    * @returns {number}
    * @throws Will throw an error if the actor is invalid
    */
-  getSkin() {
-    if (!this.#ptr) {
+  getSkin(): number {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.GetSkin(this.#ptr);
+    const result = internal_omp.Actor.GetSkin(this.ptr);
     return result.ret;
   }
 
@@ -347,12 +360,22 @@ class Actor {
    * @returns {{ret: boolean, library: string,name: string,delta: number,loop: boolean,lockX: boolean,lockY: boolean,freeze: boolean,time: number}} return object
    * @throws Will throw an error if the actor is invalid
    */
-  getAnimation() {
-    if (!this.#ptr) {
+  getAnimation(): {
+    ret: boolean;
+    library: string;
+    name: string;
+    delta: number;
+    loop: boolean;
+    lockX: boolean;
+    lockY: boolean;
+    freeze: boolean;
+    time: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.GetAnimation(this.#ptr);
+    const result = internal_omp.Actor.GetAnimation(this.ptr);
     return result;
   }
 
@@ -361,14 +384,19 @@ class Actor {
    * @returns {{ret: boolean, x: number,y: number,z: number,angle: number,skin: number}} return object
    * @throws Will throw an error if the actor is invalid
    */
-  getSpawnInfo() {
-    if (!this.#ptr) {
+  getSpawnInfo(): {
+    ret: boolean;
+    x: number;
+    y: number;
+    z: number;
+    angle: number;
+    skin: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Actor instance is not valid");
     }
 
-    const result = __internal_omp.Actor.GetSpawnInfo(this.#ptr);
+    const result = internal_omp.Actor.GetSpawnInfo(this.ptr);
     return result;
   }
 }
-
-export default Actor;

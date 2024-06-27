@@ -1,14 +1,16 @@
+import { PTR, internal_omp } from "../globals";
+
 /**
  * Class class
  */
-class Class {
+export default class Class {
   /**
    * @var ptr
    * @description Class pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,11 +18,11 @@ class Class {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @add
-   * @param {number} teamOrId
+   * @param {number} team
    * @param {number} skin
    * @param {number} x
    * @param {number} y
@@ -35,32 +37,47 @@ class Class {
    * @throws Will throw an error if the class creation fails
    */
   constructor(
-    teamOrId,
-    skin,
-    x,
-    y,
-    z,
-    angle,
-    weapon1,
-    ammo1,
-    weapon2,
-    ammo2,
-    weapon3,
-    ammo3
+    team: number,
+    skin: number,
+    x: number,
+    y: number,
+    z: number,
+    angle: number,
+    weapon1: number,
+    ammo1: number,
+    weapon2: number,
+    ammo2: number,
+    weapon3: number,
+    ammo3: number
+  );
+
+  constructor(
+    team: number,
+    skin?: number,
+    x?: number,
+    y?: number,
+    z?: number,
+    angle?: number,
+    weapon1?: number,
+    ammo1?: number,
+    weapon2?: number,
+    ammo2?: number,
+    weapon3?: number,
+    ammo3?: number
   ) {
-    if (skin === undefined && x === undefined) {
-      const result = __internal_omp.Class.FromID(teamOrId);
+    if (arguments.length < 2) {
+      const result = internal_omp.Class.FromID(team);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve class");
+        throw new Error("Failed to create class");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = teamOrId;
+      this.ptr = PTR(result.ret);
+      this.id = team;
       return;
     }
 
-    const result = __internal_omp.Class.Add(
-      teamOrId,
+    const result = internal_omp.Class.Add(
+      team,
       skin,
       x,
       y,
@@ -77,9 +94,9 @@ class Class {
       throw new Error("Failed to create class");
     }
 
-    this.#ptr = omp.PTR(result.ret);
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -88,18 +105,18 @@ class Class {
    * @param {number} id
    * @throws Will throw an error if the class retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): void {
+    if (!this.ptr) {
       throw new Error("Class instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
-      return true;
+      this.ptr = null;
+      this.id = null;
+      return;
     } else {
-      return false;
+      return;
     }
   }
 
@@ -108,8 +125,8 @@ class Class {
    * @description get class pointer
    * @returns {number|null} class pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -117,8 +134,8 @@ class Class {
    * @description get class id
    * @returns {number|null} class id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -126,8 +143,8 @@ class Class {
    * @returns {number}
    * @throws Will throw an error if the class is invalid
    */
-  static count() {
-    const result = __internal_omp.Class.Count();
+  static count(): number {
+    const result = internal_omp.Class.Count();
     return result.ret;
   }
 
@@ -136,12 +153,26 @@ class Class {
    * @returns {{ret: boolean, teamid: number,skin: number,x: number,y: number,z: number,angle: number,weapon1: number,weapon1_ammo: number,weapon2: number,weapon2_ammo: number,weapon3: number,weapon3_ammo: number}} return object
    * @throws Will throw an error if the class is invalid
    */
-  getData() {
-    if (!this.#ptr) {
+  getData(): {
+    ret: boolean;
+    teamid: number;
+    skin: number;
+    x: number;
+    y: number;
+    z: number;
+    angle: number;
+    weapon1: number;
+    weapon1_ammo: number;
+    weapon2: number;
+    weapon2_ammo: number;
+    weapon3: number;
+    weapon3_ammo: number;
+  } {
+    if (!this.ptr) {
       throw new Error("Class instance is not valid");
     }
 
-    const result = __internal_omp.Class.GetData(this.#ptr);
+    const result = internal_omp.Class.GetData(this.ptr);
     return result;
   }
 
@@ -163,25 +194,25 @@ class Class {
    * @throws Will throw an error if the class is invalid
    */
   edit(
-    teamid,
-    skin,
-    x,
-    y,
-    z,
-    angle,
-    weapon1,
-    ammo1,
-    weapon2,
-    ammo2,
-    weapon3,
-    ammo3
-  ) {
-    if (!this.#ptr) {
+    teamid: number,
+    skin: number,
+    x: number,
+    y: number,
+    z: number,
+    angle: number,
+    weapon1: number,
+    ammo1: number,
+    weapon2: number,
+    ammo2: number,
+    weapon3: number,
+    ammo3: number
+  ): boolean {
+    if (!this.ptr) {
       throw new Error("Class instance is not valid");
     }
 
-    const result = __internal_omp.Class.Edit(
-      this.#ptr,
+    const result = internal_omp.Class.Edit(
+      this.ptr,
       teamid,
       skin,
       x,
@@ -198,5 +229,3 @@ class Class {
     return result.ret;
   }
 }
-
-export default Class;

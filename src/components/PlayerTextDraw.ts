@@ -1,14 +1,17 @@
+import { Player } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * PlayerTextDraw class
  */
-class PlayerTextDraw {
+export default class PlayerTextDraw {
   /**
    * @var ptr
    * @description PlayerTextDraw pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,7 +19,7 @@ class PlayerTextDraw {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @var player
@@ -24,41 +27,40 @@ class PlayerTextDraw {
    * @type {Player|null}
    * @private
    */
-  #player = null;
+  private player: Player | null = null;
 
   /**
    * @constructor
    * @param {Player} player
-   * @param {number} xOrId
+   * @param {number} x
    * @param {number} y
    * @param {string} text
    * @throws Will throw an error if the playerTextDraw creation fails
    */
-  constructor(player, xOrId, y, text) {
-    if (y === undefined && text === undefined) {
-      const result = __internal_omp.PlayerTextDraw.FromID(
-        player.getPtr(),
-        xOrId
-      );
+  constructor(player: Player, x: number, y: number, text: string);
+
+  constructor(player: Player, x: number, y?: number, text?: string) {
+    if (arguments.length < 3) {
+      const result = internal_omp.PlayerTextDraw.FromID(player.getPtr(), x);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve playerTextDraw");
+        throw new Error("Failed to create PlayerTextDraw");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = xOrId;
-      this.#player = player;
+      this.ptr = PTR(result.ret);
+      this.id = x;
+      this.player = player;
       return;
     }
 
-    const result = __internal_omp.PlayerTextDraw.Create(player, xOrId, y, text);
+    const result = internal_omp.PlayerTextDraw.Create(player, x, y, text);
     if (result.ret === 0) {
       throw new Error("Failed to create playerTextDraw");
     }
 
-    this.#player = player;
-    this.#ptr = omp.PTR(result.ret);
+    this.player = player as Player;
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -67,18 +69,18 @@ class PlayerTextDraw {
    * @param {number} id
    * @throws Will throw an error if the playerTextDraw retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): void {
+    if (!this.ptr) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.Actor.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
-      return true;
+      this.ptr = null;
+      this.id = null;
+      return;
     } else {
-      return false;
+      return;
     }
   }
 
@@ -87,8 +89,8 @@ class PlayerTextDraw {
    * @description get entity's player
    * @returns {Player|null} playerTextDraw of current entity
    */
-  getPlayer() {
-    return this.#player;
+  getPlayer(): Player | null {
+    return this.player;
   }
 
   /**
@@ -96,8 +98,8 @@ class PlayerTextDraw {
    * @description get playerTextDraw pointer
    * @returns {number|null} playerTextDraw pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -105,8 +107,8 @@ class PlayerTextDraw {
    * @description get playerTextDraw id
    * @returns {number|null} playerTextDraw id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -114,14 +116,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  isValid() {
-    if (!this.#ptr || !this.#player) {
+  isValid(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.IsValid(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.IsValid(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -131,14 +133,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  isVisible() {
-    if (!this.#ptr || !this.#player) {
+  isVisible(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.IsVisible(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.IsVisible(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -150,14 +152,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setLetterSize(x, y) {
-    if (!this.#ptr || !this.#player) {
+  setLetterSize(x: number, y: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetLetterSize(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetLetterSize(
+      this.player.getPtr(),
+      this.ptr,
       x,
       y
     );
@@ -171,14 +173,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setTextSize(x, y) {
-    if (!this.#ptr || !this.#player) {
+  setTextSize(x: number, y: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetTextSize(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetTextSize(
+      this.player.getPtr(),
+      this.ptr,
       x,
       y
     );
@@ -191,14 +193,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setAlignment(alignment) {
-    if (!this.#ptr || !this.#player) {
+  setAlignment(alignment: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetAlignment(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetAlignment(
+      this.player.getPtr(),
+      this.ptr,
       alignment
     );
     return result.ret;
@@ -210,14 +212,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setColor(color) {
-    if (!this.#ptr || !this.#player) {
+  setColor(color: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetColor(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetColor(
+      this.player.getPtr(),
+      this.ptr,
       color
     );
     return result.ret;
@@ -229,14 +231,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  useBox(use) {
-    if (!this.#ptr || !this.#player) {
+  useBox(use: boolean): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.UseBox(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.UseBox(
+      this.player.getPtr(),
+      this.ptr,
       use
     );
     return result.ret;
@@ -248,14 +250,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setBoxColor(color) {
-    if (!this.#ptr || !this.#player) {
+  setBoxColor(color: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetBoxColor(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetBoxColor(
+      this.player.getPtr(),
+      this.ptr,
       color
     );
     return result.ret;
@@ -267,14 +269,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setShadow(size) {
-    if (!this.#ptr || !this.#player) {
+  setShadow(size: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetShadow(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetShadow(
+      this.player.getPtr(),
+      this.ptr,
       size
     );
     return result.ret;
@@ -286,14 +288,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setOutline(size) {
-    if (!this.#ptr || !this.#player) {
+  setOutline(size: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetOutline(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetOutline(
+      this.player.getPtr(),
+      this.ptr,
       size
     );
     return result.ret;
@@ -305,14 +307,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setBackgroundColor(color) {
-    if (!this.#ptr || !this.#player) {
+  setBackgroundColor(color: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetBackgroundColor(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetBackgroundColor(
+      this.player.getPtr(),
+      this.ptr,
       color
     );
     return result.ret;
@@ -324,14 +326,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setFont(font) {
-    if (!this.#ptr || !this.#player) {
+  setFont(font: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetFont(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetFont(
+      this.player.getPtr(),
+      this.ptr,
       font
     );
     return result.ret;
@@ -343,14 +345,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setProportional(set) {
-    if (!this.#ptr || !this.#player) {
+  setProportional(set: boolean): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetProportional(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetProportional(
+      this.player.getPtr(),
+      this.ptr,
       set
     );
     return result.ret;
@@ -362,14 +364,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setSelectable(set) {
-    if (!this.#ptr || !this.#player) {
+  setSelectable(set: boolean): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetSelectable(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetSelectable(
+      this.player.getPtr(),
+      this.ptr,
       set
     );
     return result.ret;
@@ -380,14 +382,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  show() {
-    if (!this.#ptr || !this.#player) {
+  show(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.Show(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.Show(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -397,14 +399,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  hide() {
-    if (!this.#ptr || !this.#player) {
+  hide(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.Hide(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.Hide(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -415,14 +417,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setString(text) {
-    if (!this.#ptr || !this.#player) {
+  setString(text: string): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetString(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetString(
+      this.player.getPtr(),
+      this.ptr,
       text
     );
     return result.ret;
@@ -434,14 +436,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setPreviewModel(model) {
-    if (!this.#ptr || !this.#player) {
+  setPreviewModel(model: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetPreviewModel(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetPreviewModel(
+      this.player.getPtr(),
+      this.ptr,
       model
     );
     return result.ret;
@@ -456,14 +458,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setPreviewRot(rx, ry, rz, zoom) {
-    if (!this.#ptr || !this.#player) {
+  setPreviewRot(rx: number, ry: number, rz: number, zoom: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetPreviewRot(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetPreviewRot(
+      this.player.getPtr(),
+      this.ptr,
       rx,
       ry,
       rz,
@@ -479,14 +481,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setPreviewVehCol(color1, color2) {
-    if (!this.#ptr || !this.#player) {
+  setPreviewVehCol(color1: number, color2: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetPreviewVehCol(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetPreviewVehCol(
+      this.player.getPtr(),
+      this.ptr,
       color1,
       color2
     );
@@ -500,14 +502,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  setPos(x, y) {
-    if (!this.#ptr || !this.#player) {
+  setPos(x: number, y: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.SetPos(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextDraw.SetPos(
+      this.player.getPtr(),
+      this.ptr,
       x,
       y
     );
@@ -519,14 +521,14 @@ class PlayerTextDraw {
    * @returns {{ret: boolean, text: string}} return object
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getString() {
-    if (!this.#ptr || !this.#player) {
+  getString(): { ret: boolean; text: string } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetString(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetString(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -536,14 +538,14 @@ class PlayerTextDraw {
    * @returns {{ret: boolean, x: number,y: number}} return object
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getLetterSize() {
-    if (!this.#ptr || !this.#player) {
+  getLetterSize(): { ret: boolean; x: number; y: number } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetLetterSize(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetLetterSize(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -553,14 +555,14 @@ class PlayerTextDraw {
    * @returns {{ret: boolean, x: number,y: number}} return object
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getTextSize() {
-    if (!this.#ptr || !this.#player) {
+  getTextSize(): { ret: boolean; x: number; y: number } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetTextSize(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetTextSize(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -570,14 +572,14 @@ class PlayerTextDraw {
    * @returns {{ret: boolean, x: number,y: number}} return object
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getPos() {
-    if (!this.#ptr || !this.#player) {
+  getPos(): { ret: boolean; x: number; y: number } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetPos(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetPos(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -587,14 +589,14 @@ class PlayerTextDraw {
    * @returns {number}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getColor() {
-    if (!this.#ptr || !this.#player) {
+  getColor(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetColor(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetColor(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -604,14 +606,14 @@ class PlayerTextDraw {
    * @returns {number}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getBoxColor() {
-    if (!this.#ptr || !this.#player) {
+  getBoxColor(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetBoxColor(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetBoxColor(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -621,14 +623,14 @@ class PlayerTextDraw {
    * @returns {number}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getBackgroundColor() {
-    if (!this.#ptr || !this.#player) {
+  getBackgroundColor(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetBackgroundColor(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetBackgroundColor(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -638,14 +640,14 @@ class PlayerTextDraw {
    * @returns {number}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getShadow() {
-    if (!this.#ptr || !this.#player) {
+  getShadow(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetShadow(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetShadow(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -655,14 +657,14 @@ class PlayerTextDraw {
    * @returns {number}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getOutline() {
-    if (!this.#ptr || !this.#player) {
+  getOutline(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetOutline(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetOutline(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -672,14 +674,14 @@ class PlayerTextDraw {
    * @returns {number}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getFont() {
-    if (!this.#ptr || !this.#player) {
+  getFont(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetFont(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetFont(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -689,14 +691,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  isBox() {
-    if (!this.#ptr || !this.#player) {
+  isBox(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.IsBox(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.IsBox(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -706,14 +708,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  isProportional() {
-    if (!this.#ptr || !this.#player) {
+  isProportional(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.IsProportional(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.IsProportional(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -723,14 +725,14 @@ class PlayerTextDraw {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  isSelectable() {
-    if (!this.#ptr || !this.#player) {
+  isSelectable(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.IsSelectable(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.IsSelectable(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -740,14 +742,14 @@ class PlayerTextDraw {
    * @returns {number}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getAlignment() {
-    if (!this.#ptr || !this.#player) {
+  getAlignment(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetAlignment(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetAlignment(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -757,14 +759,14 @@ class PlayerTextDraw {
    * @returns {number}
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getPreviewModel() {
-    if (!this.#ptr || !this.#player) {
+  getPreviewModel(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetPreviewModel(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetPreviewModel(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -774,14 +776,20 @@ class PlayerTextDraw {
    * @returns {{ret: boolean, rx: number,ry: number,rz: number,zoom: number}} return object
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getPreviewRot() {
-    if (!this.#ptr || !this.#player) {
+  getPreviewRot(): {
+    ret: boolean;
+    rx: number;
+    ry: number;
+    rz: number;
+    zoom: number;
+  } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetPreviewRot(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetPreviewRot(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -791,17 +799,15 @@ class PlayerTextDraw {
    * @returns {{ret: boolean, color1: number,color2: number}} return object
    * @throws Will throw an error if the playerTextDraw is invalid
    */
-  getPreviewVehColor() {
-    if (!this.#ptr || !this.#player) {
+  getPreviewVehColor(): { ret: boolean; color1: number; color2: number } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextDraw instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextDraw.GetPreviewVehColor(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextDraw.GetPreviewVehColor(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
 }
-
-export default PlayerTextDraw;

@@ -1,14 +1,17 @@
+import { Player, Vehicle, omp } from "./index";
+import { PTR, internal_omp } from "../globals";
+
 /**
  * PlayerTextLabel class
  */
-class PlayerTextLabel {
+export default class PlayerTextLabel {
   /**
    * @var ptr
    * @description PlayerTextLabel pointer
    * @type {number|null}
    * @private
    */
-  #ptr = null;
+  private ptr: number | null = null;
 
   /**
    * @var id
@@ -16,7 +19,7 @@ class PlayerTextLabel {
    * @type {number|null}
    * @private
    */
-  #id = null;
+  private id: number | null = null;
 
   /**
    * @var player
@@ -24,69 +27,79 @@ class PlayerTextLabel {
    * @type {Player|null}
    * @private
    */
-  #player = null;
+  private player: Player | null = null;
 
   /**
    * @constructor
    * @param {Player} player
-   * @param {string} textOrId
+   * @param {string} text
    * @param {number} color
    * @param {number} x
    * @param {number} y
    * @param {number} z
    * @param {number} drawDistance
    * @param {Player} attachedPlayer
-   * @param {Player} attachedVehicle
+   * @param {Vehicle} attachedVehicle
    * @param {boolean} los
    * @throws Will throw an error if the playerTextLabel creation fails
    */
   constructor(
-    player,
-    textOrId,
-    color,
-    x,
-    y,
-    z,
-    drawDistance,
-    attachedPlayer,
-    attachedVehicle,
-    los
+    player: Player,
+    text: string,
+    color: number,
+    x: number,
+    y: number,
+    z: number,
+    drawDistance: number,
+    attachedPlayer: Player,
+    attachedVehicle: Vehicle,
+    los: boolean
+  );
+
+  constructor(
+    player: Player,
+    text: string | number,
+    color?: number,
+    x?: number,
+    y?: number,
+    z?: number,
+    drawDistance?: number,
+    attachedPlayer?: Player,
+    attachedVehicle?: Vehicle,
+    los?: boolean
   ) {
-    if (color === undefined && x === undefined) {
-      const result = __internal_omp.PlayerTextLabel.FromID(
-        player.getPtr(),
-        textOrId
-      );
+    if (arguments.length < 3 && typeof text === "number") {
+      const result = internal_omp.PlayerTextLabel.FromID(player.getPtr(), text);
       if (result.ret === 0) {
-        throw new Error("Failed to retrieve playerTextLabel");
+        throw new Error("Failed to create PlayerTextDraw");
       }
 
-      this.#ptr = omp.PTR(result.ret);
-      this.#id = textOrId;
-      this.#player = player;
+      this.ptr = PTR(result.ret);
+      this.id = text;
+      this.player = player;
       return;
     }
 
-    const result = __internal_omp.PlayerTextLabel.Create(
+    const result = internal_omp.PlayerTextLabel.Create(
       player,
-      textOrId,
+      text,
       color,
       x,
       y,
       z,
       drawDistance,
-      attachedPlayer,
-      attachedVehicle,
+      (attachedPlayer as Player).getPtr(),
+      (attachedVehicle as Vehicle).getPtr(),
       los
     );
     if (result.ret === 0) {
       throw new Error("Failed to create playerTextLabel");
     }
 
-    this.#player = player;
-    this.#ptr = omp.PTR(result.ret);
+    this.player = player as Player;
+    this.ptr = PTR(result.ret);
     if (result.hasOwnProperty("id")) {
-      this.#id = result.id;
+      this.id = result.id;
     }
   }
 
@@ -95,18 +108,18 @@ class PlayerTextLabel {
    * @param {number} id
    * @throws Will throw an error if the playerTextLabel retrieval fails
    */
-  destroy() {
-    if (!this.#ptr) {
+  destroy(): void {
+    if (!this.ptr) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.Actor.Destroy(this.#ptr);
+    const result = internal_omp.PlayerTextLabel.Destroy(this.ptr);
     if (result.ret) {
-      this.#ptr = null;
-      this.#id = null;
-      return true;
+      this.ptr = null;
+      this.id = null;
+      return;
     } else {
-      return false;
+      return;
     }
   }
 
@@ -115,8 +128,8 @@ class PlayerTextLabel {
    * @description get entity's player
    * @returns {Player|null} playerTextLabel of current entity
    */
-  getPlayer() {
-    return this.#player;
+  getPlayer(): Player | null {
+    return this.player;
   }
 
   /**
@@ -124,8 +137,8 @@ class PlayerTextLabel {
    * @description get playerTextLabel pointer
    * @returns {number|null} playerTextLabel pointer
    */
-  getPtr() {
-    return this.#ptr;
+  getPtr(): number | null {
+    return this.ptr;
   }
 
   /**
@@ -133,8 +146,8 @@ class PlayerTextLabel {
    * @description get playerTextLabel id
    * @returns {number|null} playerTextLabel id
    */
-  getID() {
-    return this.#id;
+  getID(): number | null {
+    return this.id;
   }
 
   /**
@@ -144,14 +157,14 @@ class PlayerTextLabel {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  updateText(color, text) {
-    if (!this.#ptr || !this.#player) {
+  updateText(color: number, text: string): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.UpdateText(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextLabel.UpdateText(
+      this.player.getPtr(),
+      this.ptr,
       color,
       text
     );
@@ -163,14 +176,14 @@ class PlayerTextLabel {
    * @returns {{ret: boolean, valid: boolean}} return object
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  isValid() {
-    if (!this.#ptr || !this.#player) {
+  isValid(): { ret: boolean; valid: boolean } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.IsValid(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextLabel.IsValid(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -180,14 +193,14 @@ class PlayerTextLabel {
    * @returns {{ret: boolean, output: string}} return object
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  getText() {
-    if (!this.#ptr || !this.#player) {
+  getText(): { ret: boolean; output: string } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.GetText(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextLabel.GetText(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -197,14 +210,14 @@ class PlayerTextLabel {
    * @returns {{ret: boolean, color: number}} return object
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  getColor() {
-    if (!this.#ptr || !this.#player) {
+  getColor(): { ret: boolean; color: number } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.GetColor(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextLabel.GetColor(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -214,14 +227,14 @@ class PlayerTextLabel {
    * @returns {{ret: boolean, x: number,y: number,z: number}} return object
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  getPos() {
-    if (!this.#ptr || !this.#player) {
+  getPos(): { ret: boolean; x: number; y: number; z: number } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.GetPos(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextLabel.GetPos(
+      this.player.getPtr(),
+      this.ptr
     );
     return result;
   }
@@ -232,14 +245,14 @@ class PlayerTextLabel {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  setDrawDistance(distance) {
-    if (!this.#ptr || !this.#player) {
+  setDrawDistance(distance: number): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.SetDrawDistance(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextLabel.SetDrawDistance(
+      this.player.getPtr(),
+      this.ptr,
       distance
     );
     return result.ret;
@@ -250,14 +263,14 @@ class PlayerTextLabel {
    * @returns {number}
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  getDrawDistance() {
-    if (!this.#ptr || !this.#player) {
+  getDrawDistance(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.GetDrawDistance(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextLabel.GetDrawDistance(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -267,14 +280,14 @@ class PlayerTextLabel {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  getLOS() {
-    if (!this.#ptr || !this.#player) {
+  getLOS(): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.GetLOS(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextLabel.GetLOS(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -285,14 +298,14 @@ class PlayerTextLabel {
    * @returns {boolean}
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  setLOS(status) {
-    if (!this.#ptr || !this.#player) {
+  setLOS(status: boolean): boolean {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.SetLOS(
-      this.#player.getPtr(),
-      this.#ptr,
+    const result = internal_omp.PlayerTextLabel.SetLOS(
+      this.player.getPtr(),
+      this.ptr,
       status
     );
     return result.ret;
@@ -303,14 +316,14 @@ class PlayerTextLabel {
    * @returns {number}
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  getVirtualWorld() {
-    if (!this.#ptr || !this.#player) {
+  getVirtualWorld(): number {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.GetVirtualWorld(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextLabel.GetVirtualWorld(
+      this.player.getPtr(),
+      this.ptr
     );
     return result.ret;
   }
@@ -320,17 +333,30 @@ class PlayerTextLabel {
    * @returns {{ret: boolean, attached_player: number,attached_vehicle: number}} return object
    * @throws Will throw an error if the playerTextLabel is invalid
    */
-  getAttachedData() {
-    if (!this.#ptr || !this.#player) {
+  getAttachedData(): {
+    ret: boolean;
+    attached_player: Player | undefined;
+    attached_vehicle: Vehicle | undefined;
+  } {
+    if (!this.ptr || !this.player) {
       throw new Error("PlayerTextLabel instance is not valid");
     }
 
-    const result = __internal_omp.PlayerTextLabel.GetAttachedData(
-      this.#player.getPtr(),
-      this.#ptr
+    const result = internal_omp.PlayerTextLabel.GetAttachedData(
+      this.player.getPtr(),
+      this.ptr
     );
-    return result;
+
+    const ret: {
+      ret: boolean;
+      attached_vehicle: Vehicle | undefined;
+      attached_player: Player | undefined;
+    } = {
+      ret: result.ret,
+      attached_vehicle: omp.vehicles.get(result.attached_vehicle),
+      attached_player: omp.players.get(result.attached_player),
+    };
+
+    return ret;
   }
 }
-
-export default PlayerTextLabel;
