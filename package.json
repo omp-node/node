@@ -1,6 +1,6 @@
 {
   "name": "@open.mp/node",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "open.mp nodejs package. contains constants, type definitions, and initializers",
   "scripts": {
     "build": "rollup -c rollup.config.js --environment TARGET:@open.mp/node",
