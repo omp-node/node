@@ -29,7 +29,7 @@ export default class Player {
   constructor(id: number) {
     const result = internal_omp.Player.FromID(id);
     if (result.ret === 0) {
-      throw new Error("Failed to retireve player");
+      throw new Error("Failed to retrieve player");
     }
 
     this.ptr = PTR(result.ret);

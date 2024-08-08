@@ -1464,8 +1464,8 @@ export const initializeEvents = () => {
   eventEmitter_raw.on("playerConnect", async (badRet, player) => {
     let player_ = omp.players.get(player);
     if (player_ === undefined) {
-      const playerId = __internal_omp.Player.GetID(player);
-      const playerEntity = new Player(playerId);
+      const result = __internal_omp.Player.GetID(player);
+      const playerEntity = new Player(result.ret);
       if (playerEntity === undefined)
         throw new Error(
           "Unable to cast player to Player for incomingConnection. Value: " +
@@ -1610,8 +1610,8 @@ export const initializeEvents = () => {
   eventEmitter_raw.on(
     "incomingConnection",
     async (badRet, player, ipAddress, port) => {
-      const playerId = __internal_omp.Player.GetID(player);
-      const playerEntity = new Player(playerId);
+      const result = __internal_omp.Player.GetID(player);
+      const playerEntity = new Player(result.ret);
       if (playerEntity === undefined)
         throw new Error(
           "Unable to cast player to Player for incomingConnection. Value: " +
@@ -1623,18 +1623,18 @@ export const initializeEvents = () => {
 
       const listeners =
         __internal_omp.eventEmitter.listeners("incomingConnection");
-      let result = true;
+      let eventResult = true;
       for await (const listener of listeners) {
-        result = await listener(player_, ipAddress, port);
-        if (typeof result === "boolean" || typeof result === "number") {
+        eventResult = await listener(player_, ipAddress, port);
+        if (typeof eventResult === "boolean" || typeof eventResult === "number") {
           switch (badRet) {
             case 1:
-              if (!result) {
+              if (!eventResult) {
                 return false;
               }
               break;
             case 2:
-              if (result) {
+              if (eventResult) {
                 return true;
               }
               break;
