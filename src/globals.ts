@@ -671,7 +671,7 @@ interface IOMP {
    */
   on(
     eventName: "playerDeath",
-    callback: (player: Player, killer: Player, reason: number) => any
+    callback: (player: Player, killer: Player | undefined, reason: number) => any
   ): void;
   /**
    * Adds a new event listener to playerTakeDamage
@@ -685,7 +685,7 @@ interface IOMP {
     eventName: "playerTakeDamage",
     callback: (
       player: Player,
-      from: Player,
+      from: Player | undefined,
       amount: number,
       weapon: number,
       bodypart: number
@@ -1629,7 +1629,7 @@ interface IOMP {
    */
   addListener(
     eventName: "playerDeath",
-    callback: (player: Player, killer: Player, reason: number) => any
+    callback: (player: Player, killer: Player | undefined, reason: number) => any
   ): void;
   /**
    * Adds a new event listener to playerTakeDamage
@@ -1643,7 +1643,7 @@ interface IOMP {
     eventName: "playerTakeDamage",
     callback: (
       player: Player,
-      from: Player,
+      from: Player | undefined,
       amount: number,
       weapon: number,
       bodypart: number
@@ -2551,7 +2551,7 @@ interface IOMP {
    */
   removeListener(
     eventName: "playerDeath",
-    callback: (player: Player, killer: Player, reason: number) => any
+    callback: (player: Player, killer: Player | undefined, reason: number) => any
   ): void;
   /**
    * Removes a specific listener for playerTakeDamage
@@ -2564,7 +2564,7 @@ interface IOMP {
     eventName: "playerTakeDamage",
     callback: (
       player: Player,
-      from: Player,
+      from: Player | undefined,
       amount: number,
       weapon: number,
       bodypart: number

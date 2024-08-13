@@ -2029,11 +2029,9 @@ export const initializeEvents = () => {
       throw new Error(
         "Unable to cast player to Player for playerDeath. Value: " + player
       );
+
     const killer_ = omp.players.get(killer);
-    if (killer_ === undefined)
-      throw new Error(
-        "Unable to cast killer to Player for playerDeath. Value: " + killer
-      );
+
     const listeners = __internal_omp.eventEmitter.listeners("playerDeath");
     let result = true;
     for await (const listener of listeners) {
@@ -2068,11 +2066,9 @@ export const initializeEvents = () => {
           "Unable to cast player to Player for playerTakeDamage. Value: " +
             player
         );
+
       const from_ = omp.players.get(from);
-      if (from_ === undefined)
-        throw new Error(
-          "Unable to cast from to Player for playerTakeDamage. Value: " + from
-        );
+
       const listeners =
         __internal_omp.eventEmitter.listeners("playerTakeDamage");
       let result = true;
