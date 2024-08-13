@@ -3,7 +3,7 @@
   "version": "0.2.3",
   "description": "open.mp nodejs package. contains constants, type definitions, and initializers",
   "scripts": {
-    "build": "rollup -c rollup.config.js --environment TARGET:@open.mp/node",
+    "build": "rollup -c rollup.config.mjs --environment TARGET:@open.mp/node",
     "publish": "npm publish --access public"
   },
   "keywords": [
