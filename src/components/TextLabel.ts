@@ -95,7 +95,7 @@ export default class TextLabel {
       throw new Error("TextLabel instance is not valid");
     }
 
-    const result = internal_omp.PlayerTextLabel.Destroy(this.ptr);
+    const result = internal_omp.TextLabel.Destroy(this.ptr);
     if (result.ret) {
       this.ptr = null;
       this.id = null;
