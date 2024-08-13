@@ -1,6 +1,6 @@
 {
   "name": "@open.mp/node",
-  "version": "0.2.3",
+  "version": "0.2.6",
   "description": "open.mp nodejs package. contains constants, type definitions, and initializers",
   "scripts": {
     "build": "rollup -c rollup.config.mjs --environment TARGET:@open.mp/node",
@@ -34,13 +34,13 @@
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@types/node": "^18.19.39",
-    "typescript": "^5.4.5",
     "rollup": "^4.17.2",
     "rollup-plugin-delete": "^2.0.0",
     "rollup-plugin-dts": "^6.1.0",
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-node-externals": "^7.1.2",
-    "rollup-plugin-typescript-paths": "^1.5.0"
+    "rollup-plugin-typescript-paths": "^1.5.0",
+    "typescript": "^5.4.5"
   },
   "repository": "https://github.com/omp-node/node",
   "homepage": "https://github.com/omp-node/node",
